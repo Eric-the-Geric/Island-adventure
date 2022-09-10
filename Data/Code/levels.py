@@ -18,10 +18,12 @@ class Test_level:
         # Initialize the sprite groups
         self.player_group = pygame.sprite.GroupSingle()
         self.collision_group = pygame.sprite.Group()
-        self.semi_collision_group = pygame.sprite.Group()
         self.water_group = pygame.sprite.Group()
         self.camera_group = Camera()
         self.power_group = pygame.sprite.Group()
+        self.tree_group = pygame.sprite.Group()
+        self.bridge_group = pygame.sprite.Group()
+        self.sand_group = pygame.sprite.Group()
 
         # Getting the layout data
         self.player_layout = import_map_data(Level_test["Player"])
@@ -61,7 +63,7 @@ class Test_level:
         self.camera_group.custom_draw(self.player)
         self.water_group.update()
         self.player_group.update(event_list)
-        
+        self.sand_group.update()
 
 
 
@@ -72,7 +74,7 @@ class Test_level:
                         if value == '0':
                             y = row_index *tile_size
                             x = col_index *tile_size
-                            return Player([self.player_group, self.camera_group], (x, y), self.collision_group, self.water_group)
+                            return Player([self.player_group, self.camera_group], (x, y), self.collision_group, self.water_group, self.tree_group, self.bridge_group, self.sand_group)
     
     
     def _create_terrain(self, layout, type, image):
@@ -82,12 +84,15 @@ class Test_level:
                         x = col_index *tile_size
                         if value != "-1":
                             if type == "terrain":
-                                StaticTile([self.collision_group, self.camera_group], (x, y), image[int(value)])
+                                if value == "4":
+                                    SandTile([self.collision_group, self.sand_group, self.camera_group], (x, y), image[int(value)])
+                                else:
+                                    StaticTile([self.collision_group, self.camera_group], (x, y), image[int(value)])
                             if type == "tree":
-                                StaticTile([self.camera_group], (x, y), image[int(value)])
+                                StaticTile([self.camera_group, self.tree_group], (x, y), image[int(value)])
                             if type == "water":
-                                Water([self.camera_group, self.water_group], (x, y), image[int(value)])
+                                WaterTile([self.camera_group, self.water_group], (x, y), image[int(value)])
                             if type == "clouds":
                                 StaticTile([self.camera_group], (x, y), image[int(value)])
                             if type == "bridge":
-                                StaticTile([self.collision_group, self.camera_group], (x, y), image[int(value)])
+                                StaticTile([self.camera_group, self.bridge_group], (x, y), image[int(value)])

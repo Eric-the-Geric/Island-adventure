@@ -1,15 +1,16 @@
 import pygame
 from Data.Code.settings import *
 from Data.Code.helper import *
-
+import random
 
 class StaticTile(pygame.sprite.Sprite):
     def __init__(self, group, pos, image):
         super().__init__(group)
         self.image = image
         self.rect = self.image.get_rect(topleft = pos)
+        self.mask = pygame.mask.from_surface(self.image)
 
-class Water(pygame.sprite.Sprite):
+class WaterTile(pygame.sprite.Sprite):
     def __init__(self, group, pos, image):
         super().__init__(group)
         self.image = image
@@ -28,3 +29,38 @@ class Water(pygame.sprite.Sprite):
     def update(self):
         self.move()
         self.transparency()
+
+class SandTile(pygame.sprite.Sprite):
+    def __init__(self, group, pos, image):
+        super().__init__(group)
+        self.image = image
+        self.rect = self.image.get_rect(topleft = pos)
+        self.touched = False
+        self.shake_timer = 0
+        self.offset = pygame.math.Vector2()
+        self.pos = pos
+        self.init_fall = False
+        self.gravity = 5
+        #self.direction = pygame.math.Vector2()
+        
+    
+    def shake(self):
+        if self.touched and not self.init_fall:
+            self.offset.y = random.randint(-1,1)
+            self.offset.x = random.randint(-1,1)
+            self.rect.center += self.offset
+            self.shake_timer += 0.3
+            if self.shake_timer > 10:
+                self.init_fall = True
+                self.touched = False
+    
+    def move(self):
+        self.rect.centery += self.gravity
+        
+    def update(self):
+        if self.init_fall:
+            self.move()
+        self.shake()
+        
+class Particles(pygame.sprite.Sprite):
+    pass

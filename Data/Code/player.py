@@ -3,7 +3,7 @@ from Data.Code.helper import *
 from Data.Code.level_data import Level_graphics
 
 class Player(pygame.sprite.Sprite):
-    def __init__(self, group, pos, collision_group, water_group):
+    def __init__(self, group, pos, collision_group, water_group, tree_group, bridge_group, sand_group):
         super().__init__(group)
 
         
@@ -36,15 +36,18 @@ class Player(pygame.sprite.Sprite):
         # Player hitbox and image
         self.image = self.idle[0]
         self.rect = self.image.get_rect(topleft=pos)
-        
+        self.mask = pygame.mask.from_surface(self.image)
             #collisions
         self.collision_group = collision_group
         self.water_group = water_group
+        self.tree_group = tree_group
+        self.bridge_group = bridge_group
+        self.sand_group = sand_group
         # Player animation
 
         self.frames = 0
         self.action = "right"
-        self.frame_speed = 0.1
+        self.frame_speed = 0.05
 
         # Interactions
 
@@ -168,17 +171,39 @@ class Player(pygame.sprite.Sprite):
         offset_pos = (self.rect.topleft - self.offset)
         pygame.draw.rect(self.surface, ("white"), pygame.Rect(offset_pos[0], offset_pos[1], self.breath, 10))
 
+    def win_level(self):
+        for sprite in self.tree_group:
+            if sprite.rect.colliderect(self.rect):
+                print("you win")
+
+    def Bridge_collision(self):
+        for sprite in self.bridge_group.sprites():
+            if sprite.rect.colliderect(self.rect):
+                if self.direction.y > 0 and abs(self.rect.bottom - sprite.rect.top) < 10:
+                    self.rect.bottom = sprite.rect.top
+                    self.direction.y = 0
+                    self.jumps = 0
+
+    def Sand_collision(self):
+        for sprite in self.sand_group.sprites():
+            if sprite.rect.colliderect(self.rect):
+                sprite.touched = True
+
     def update(self, event_list):
         self.get_input(event_list)
         self.move()
+        self.Sand_collision()
         self.horizontal_collision()
         self.apply_gravity()
         self.vertical_collision()
+        self.Bridge_collision()
         self.animate()
         self.water_collision()
+        
         self.breath_bar()
         self.drowning()
         self.kill_player()
+        self.win_level()
         
         #print(self.jump_height, self.underwater, self.speed, self.gravity)
         #self.deep_blue()
