@@ -179,7 +179,7 @@ class Player(pygame.sprite.Sprite):
     def Bridge_collision(self):
         for sprite in self.bridge_group.sprites():
             if sprite.rect.colliderect(self.rect):
-                if self.direction.y > 0 and abs(self.rect.bottom - sprite.rect.top) < 10:
+                if self.direction.y > 0 and abs(self.rect.bottom - sprite.rect.top) < 25:
                     self.rect.bottom = sprite.rect.top
                     self.direction.y = 0
                     self.jumps = 0
