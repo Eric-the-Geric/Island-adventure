@@ -6,23 +6,33 @@ class Game:
 
     def __init__(self):
         pygame.init()
-        self.surface = pygame.display.set_mode(screen)
+
+        # with the flags arguments it makes it so I can toggle full-screen
+        self.surface = pygame.display.set_mode(screen, flags=pygame.SCALED)
         
         self.run = True
         self.clock = pygame.time.Clock()
         self.level = Test_level()
         self.font = pygame.font.Font(None, 30)
         self.fps_offset = pygame.math.Vector2()
-
+        
     def loop(self):
         pygame.display.set_caption("Island Ascension")
         while self.run:
+            
             self.surface.fill("black")
             events = pygame.event.get()
 
             for event in events:
                 if event.type == pygame.QUIT:
                     self.run = False
+                if event.type ==pygame.KEYDOWN:
+                    if event.key == pygame.K_ESCAPE:
+                        self.run = False
+                    if event.key == pygame.K_f:
+                        pygame.display.toggle_fullscreen()
+
+                        
             if self.level.run(events):
                 self.level = Test_level()
 
