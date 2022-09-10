@@ -1,6 +1,6 @@
 import pygame
 import csv
-from settings import *
+from Data.Code.settings import *
 
 
 def import_map_data(path):

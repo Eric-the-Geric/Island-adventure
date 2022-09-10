@@ -12,7 +12,7 @@ class Camera(pygame.sprite.Group):
 
     # Normal camera
     def focus_target(self, target):
-        self.offset.x = self.h_width - target.rect.centerx
+        self.offset.y = target.rect.centery - self.h_height
         
     # camera kind of lags behind
     def cool_camera(self, target):
@@ -25,7 +25,7 @@ class Camera(pygame.sprite.Group):
         shake = pygame.math.Vector2(shake_x, shake_y)
         
         #self.focus_target(target)
-        self.cool_camera(target)
+        self.focus_target(target)
         for sprite in self.sprites():
             if self.screenshake:
                 offset_pos = ((sprite.rect.topleft+ shake) - self.offset)/1

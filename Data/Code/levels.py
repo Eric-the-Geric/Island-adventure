@@ -1,13 +1,13 @@
-import pygame
-from helper import *
-from settings import *
-from level_data import *
-from tile import *
-from player import *
-from camera import *
-import random
-from sound_effects import SoundEffects
+# Imports
 
+import pygame
+import random
+from Data.Code.settings import *
+from Data.Code.helper import *
+from Data.Code.camera import Camera
+from Data.Code.level_data import *
+from Data.Code.player import Player
+from Data.Code.tile import *
 
 class Test_level:
     def __init__(self):
@@ -18,8 +18,68 @@ class Test_level:
         # Initialize the sprite groups
         self.player_group = pygame.sprite.GroupSingle()
         self.collision_group = pygame.sprite.Group()
-        self.semi_collision_gorup = pygame.sprite.Group()
+        self.semi_collision_group = pygame.sprite.Group()
         self.water_group = pygame.sprite.Group()
         self.camera_group = Camera()
         self.power_group = pygame.sprite.Group()
 
+        # Getting the layout data
+        self.player_layout = import_map_data(Level_test["Player"])
+        self.terrain_layout = import_map_data(Level_test["Sand"])
+        self.tree_layout = import_map_data(Level_test["Tree"])
+        self.water_layout = import_map_data(Level_test["Water"])
+        self.clouds_layout = import_map_data(Level_test["Clouds"])
+        self.bridge_layout = import_map_data(Level_test["Bridge"])
+
+        # set up the images
+        self.terrain_image = import_complicated_full_sprite_sheet(Level_graphics["Sand"], tile_size, tile_size)
+        self.tree_image = import_complicated_full_sprite_sheet(Level_graphics["Tree"], tile_size, tile_size)
+        self.water_image = import_complicated_full_sprite_sheet(Level_graphics["Water"], tile_size, tile_size)
+        self.clouds_image = import_complicated_full_sprite_sheet(Level_graphics["Clouds"], tile_size, tile_size)
+        self.bridge_image = import_complicated_full_sprite_sheet(Level_graphics["Bridge"], tile_size, tile_size)
+
+        # the powerup
+        self.coconut_image = import_complicated_full_sprite_sheet(Level_graphics["Coconut"], 14, 14)
+
+
+        # Set up the sprites
+        self.player = self._create_player(self.player_layout)
+        self.terrain = self._create_terrain(self.terrain_layout, "terrain", self.terrain_image)
+        self.tree = self._create_terrain(self.tree_layout, "tree", self.tree_image)
+        self.bridge = self._create_terrain(self.bridge_layout, "bridge", self.bridge_image)
+        self.clouds = self._create_terrain(self.clouds_layout, "clouds", self.clouds_image)
+        self.water = self._create_terrain(self.water_layout, "water", self.water_image)
+
+    def run(self, event_list):
+        self.camera_group.custom_draw(self.player)
+        self.water_group.update()
+        self.player_group.update(event_list)
+
+
+
+    def _create_player(self, layout):
+        for row_index, row in enumerate(layout):
+                for col_index, value in enumerate(row):
+                    if value != '-1':
+                        if value == '0':
+                            y = row_index *tile_size
+                            x = col_index *tile_size
+                            return Player([self.player_group, self.camera_group], (x, y), self.collision_group, self.water_group)
+    
+    
+    def _create_terrain(self, layout, type, image):
+            for row_index, row in enumerate(layout):
+                    for col_index, value in enumerate(row):
+                        y = row_index *tile_size
+                        x = col_index *tile_size
+                        if value != "-1":
+                            if type == "terrain":
+                                StaticTile([self.collision_group, self.camera_group], (x, y), image[int(value)])
+                            if type == "tree":
+                                StaticTile([self.camera_group], (x, y), image[int(value)])
+                            if type == "water":
+                                Water([self.camera_group, self.water_group], (x, y), image[int(value)])
+                            if type == "clouds":
+                                StaticTile([self.camera_group], (x, y), image[int(value)])
+                            if type == "bridge":
+                                StaticTile([self.collision_group, self.camera_group], (x, y), image[int(value)])

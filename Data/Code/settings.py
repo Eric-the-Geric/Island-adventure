@@ -1,6 +1,7 @@
 # Settings for my game
 
 tile_size = 64
+player_size = 32
 screen_width = 640
 screen_height = 640
 screen = (screen_width, screen_height)
