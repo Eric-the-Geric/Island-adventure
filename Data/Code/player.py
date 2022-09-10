@@ -49,7 +49,8 @@ class Player(pygame.sprite.Sprite):
         # Interactions
 
         self.underwater = False
-        self.breath = 100
+        self.max_breath = 200
+        self.breath = 200
         self.dead = False
 
     def get_input(self, events):
@@ -155,17 +156,17 @@ class Player(pygame.sprite.Sprite):
     def drowning(self):
         if self.underwater:
             self.breath -= 1
-        elif not self.underwater and self.breath < 100:
+        elif not self.underwater and self.breath < self.max_breath:
             self.breath+=2
 
     def kill_player(self):
         if self.breath <= 0:
             self.dead = True
     def breath_bar(self):
-        print(32*(self.breath/100))
-        self.offset.y = self.rect.centery - self.h_height - player_size+5
+        self.offset.x += (self.rect.right - 100 - self.offset.x - (screen_width)//2)
+        self.offset.y += (self.rect.centery - 280 - self.offset.y - (screen_height)//2)
         offset_pos = (self.rect.topleft - self.offset)
-        pygame.draw.rect(self.surface, ("white"), pygame.Rect(offset_pos[0], offset_pos[1], (32*(self.breath//100)), 5))
+        pygame.draw.rect(self.surface, ("white"), pygame.Rect(offset_pos[0], offset_pos[1], self.breath, 10))
 
     def update(self, event_list):
         self.get_input(event_list)

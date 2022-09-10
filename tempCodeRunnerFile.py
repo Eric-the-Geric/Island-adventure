@@ -1,0 +1,1 @@
+offset.x += (self.level.player.rect.centerx + 240 - self.fps_offset.x - (screen_width)//2)
