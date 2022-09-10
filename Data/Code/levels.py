@@ -44,16 +44,24 @@ class Test_level:
 
         # Set up the sprites
         self.player = self._create_player(self.player_layout)
-        self.terrain = self._create_terrain(self.terrain_layout, "terrain", self.terrain_image)
-        self.tree = self._create_terrain(self.tree_layout, "tree", self.tree_image)
-        self.bridge = self._create_terrain(self.bridge_layout, "bridge", self.bridge_image)
-        self.clouds = self._create_terrain(self.clouds_layout, "clouds", self.clouds_image)
+        self._create_terrain(self.terrain_layout, "terrain", self.terrain_image)
+        self._create_terrain(self.tree_layout, "tree", self.tree_image)
+        self._create_terrain(self.bridge_layout, "bridge", self.bridge_image)
+        self._create_terrain(self.clouds_layout, "clouds", self.clouds_image)
         self.water = self._create_terrain(self.water_layout, "water", self.water_image)
 
     def run(self, event_list):
+        if self.player.dead:
+            print("oof")
+            self.player.breath = 100
+            self.player.dead = False
+            return True
+
+    
         self.camera_group.custom_draw(self.player)
         self.water_group.update()
         self.player_group.update(event_list)
+        
 
 
 
