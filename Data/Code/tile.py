@@ -100,3 +100,4 @@ class LevelTile(MenuTile):
 
             if pygame.mouse.get_pressed()[1]:
                 self.display_your_data = True
+        

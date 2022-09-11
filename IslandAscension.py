@@ -2,6 +2,8 @@ import pygame
 from Data.Code.settings import *
 from Data.Code.levels import *
 import sys
+
+
 class Tutorial:
 
     def __init__(self):
@@ -12,7 +14,7 @@ class Tutorial:
         
         self.run = True
         self.clock = pygame.time.Clock()
-        self.level = Test_level()
+        self.level = BaseLevel()
         self.font = pygame.font.Font(None, 30)
         self.fps_offset = pygame.math.Vector2()
 
@@ -39,7 +41,7 @@ class Tutorial:
                     if event.key == pygame.K_f:
                         pygame.display.toggle_fullscreen()
                     if event.key ==pygame.K_r:
-                        self.level = Test_level()
+                        self.level = BaseLevel()
    
             if self.level.run(events):
                 menu = Menu()
@@ -136,6 +138,7 @@ class Level_Selection:
         self.run = True
         self.clock = pygame.time.Clock()
         self.level = Level_selector()
+        self.level_one = LevelOne()
         self.one = False
         self.two = False
         self.three = False
@@ -160,12 +163,16 @@ class Level_Selection:
                         menu.loop()
                     if event.key == pygame.K_f:
                         pygame.display.toggle_fullscreen()
-
+            if self.level.one.sprite.clicked:
+                self.one = True
+            if self.one:
+                self.level_one.run(events)
             self.clock.tick(FPS)
             pygame.display.flip()
 
 def main():
     menu = Menu()
     menu.loop()
+
 if __name__ == '__main__':
     main()

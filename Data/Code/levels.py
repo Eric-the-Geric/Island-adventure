@@ -11,7 +11,7 @@ from Data.Code.tile import *
 import json
 
 
-class Test_level:
+class BaseLevel:
     def __init__(self):
 
         # Get the current surface
@@ -19,9 +19,10 @@ class Test_level:
 
         
         # Level data
+        self.level_number = "Tutorial"
         self.Level_data = Level_test
         self.data = {
-            "Tutorial": {
+            self.level_number: {
                 "fastest_time": 0,
                 "coconuts_collected": 0,
                 "max_coconuts": 3,
@@ -86,11 +87,11 @@ class Test_level:
             return True
 
         if self.player.won:
-            self.data["Tutorial"]["level_won"] = "yes"
+            self.data[self.level_number]["level_won"] = "yes"
             if self.player.collected > self.data["Tutorial"]["coconuts_collected"]:
-                self.data["Tutorial"]["coconuts_collected"] = self.player.collected
+                self.data[self.level_number]["coconuts_collected"] = self.player.collected
             if self.player.speedrunner/1000 < self.data["Tutorial"]["fastest_time"] or self.data["Tutorial"]["fastest_time"]==0:
-                self.data["Tutorial"]["fastest_time"] = self.player.speedrunner/1000
+                self.data[self.level_number]["fastest_time"] = self.player.speedrunner/1000
 
             with open('data.txt', 'w') as f:
                 json.dump(self.data, f)
@@ -239,8 +240,8 @@ class Level_selector:
     def _create_terrain(self, layout):
         for row_index, row in enumerate(layout):
             for col_index, value in enumerate(row):
-                y = row_index *tile_size
-                x = col_index *tile_size
+                y = row_index *(2*tile_size)
+                x = col_index *(2*tile_size)
                 if value != "-1":
                     if value == "0":
                         LevelTile(self.one, (x,y), self.image[int(value)])
@@ -252,3 +253,9 @@ class Level_selector:
                         LevelTile(self.four, (x,y), self.image[int(value)])
                     if value == "4":
                         LevelTile(self.five, (x,y), self.image[int(value)])
+
+class LevelOne(BaseLevel):
+    def __init__(self):
+        super().__init__()
+        self.Level_data = Level_1
+        self.level_number = "Level_One"

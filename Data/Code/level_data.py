@@ -46,3 +46,10 @@ Level_selector_graphics = {"level": "Data/Graphics/Level_Selection.png"}
 # Level 1 data
 ################################
 
+Level_1 = {"Bridge": "Data/Map/Level_one/Level_one_Bridge.csv",
+              "Clouds": "Data/Map/Level_one/Level_one_Clouds.csv",
+              "Player": "Data/Map/Level_one/Level_one_Player.csv",
+              "Sand": "Data/Map/Level_one/Level_one_Sand.csv",
+              "Tree": "Data/Map/Level_one/Level_one_Tree.csv",
+              "Water": "Data/Map/Level_one/Level_one_Water.csv",
+              "Coconut": "Data/Map/Level_one/Level_one_Coconut.csv"}
