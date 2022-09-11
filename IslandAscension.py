@@ -130,8 +130,10 @@ def main():
         menu.loop()
         if menu.quit:
             run = False
-        if menu.tutorial:
+        elif menu.tutorial:
             level.loop()
+            menu.tutorial = False
+            menu.run = True
 
 
     
