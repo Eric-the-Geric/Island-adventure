@@ -15,7 +15,7 @@ class Tutorial:
         self.level = Test_level()
         self.font = pygame.font.Font(None, 30)
         self.fps_offset = pygame.math.Vector2()
-        self.paused = True
+        self.paused = False
 
         
     def loop(self):
@@ -83,6 +83,7 @@ class Menu:
         self.quit = False
         self.fluffy = False
         self.level_selector = False
+        self.tutorial = Tutorial()
 
     def loop(self):
         pygame.display.set_caption("Island Ascension")
@@ -96,12 +97,13 @@ class Menu:
                     self.run = False
                 if event.type ==pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
+                        self.quit = True
                         self.run = False
                     if event.key == pygame.K_f:
                         pygame.display.toggle_fullscreen()
             if self.level.Tutorial.sprite.clicked:
-                self.tutorial = True
-                self.run = False
+                self.tutorial.loop()
+                self.level.Tutorial.sprite.Clicked = False
             if self.level.key_bindings.sprite.clicked:
                 self.keybindings = True
                 self.run = False
@@ -118,25 +120,8 @@ class Menu:
             self.clock.tick(FPS)
             pygame.display.flip()
 
-
-
-
 def main():
-    run = True
     menu = Menu()
-    level = Tutorial()
-
-    while run:
-        menu.loop()
-        if menu.quit:
-            run = False
-        elif menu.tutorial:
-            level.loop()
-            menu.tutorial = False
-            menu.run = True
-
-
-    
 
 if __name__ == '__main__':
     main()
