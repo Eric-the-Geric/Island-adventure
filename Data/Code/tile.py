@@ -74,12 +74,13 @@ class MenuTile(pygame.sprite.Sprite):
         self.rect = self.image.get_rect(topleft = pos)
         self.mask = pygame.mask.from_surface(self.image)
         self.clicked = False
-        print(self.clicked)
     
     def mouse_collision(self):
         mouse_pos = pygame.mouse.get_pos()
         if self.rect.collidepoint(mouse_pos):
             if pygame.mouse.get_pressed()[0] and not self.clicked:
                 self.clicked = True
+            else: self.clicked = False
+            
     def update(self):
         self.mouse_collision()

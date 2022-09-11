@@ -89,10 +89,9 @@ class Test_level:
             self.data["Tutorial"]["level_won"] = "yes"
             if self.player.collected > self.data["Tutorial"]["coconuts_collected"]:
                 self.data["Tutorial"]["coconuts_collected"] = self.player.collected
-            if self.player.speedrunner/1000 < self.data["Tutorial"]["fastest_time"]:
+            if self.player.speedrunner/1000 < self.data["Tutorial"]["fastest_time"] or self.data["Tutorial"]["fastest_time"]==0:
                 self.data["Tutorial"]["fastest_time"] = self.player.speedrunner/1000
 
-            print(self.data)
             with open('data.txt', 'w') as f:
                 json.dump(self.data, f)
             self.won = True

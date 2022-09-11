@@ -1,7 +1,7 @@
 import pygame
 from Data.Code.settings import *
 from Data.Code.levels import *
-
+import sys
 class Tutorial:
 
     def __init__(self):
@@ -15,7 +15,6 @@ class Tutorial:
         self.level = Test_level()
         self.font = pygame.font.Font(None, 30)
         self.fps_offset = pygame.math.Vector2()
-        self.paused = False
 
         
     def loop(self):
@@ -30,30 +29,32 @@ class Tutorial:
             for event in events:
                 if event.type == pygame.QUIT:
                     self.run = False
+                    pygame.quit()
+                    sys.exit()
                 if event.type ==pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
-                        self.run = False
+                        menu = Menu()
+                        menu.loop()
+                        #self.run = False
                     if event.key == pygame.K_f:
                         pygame.display.toggle_fullscreen()
                     if event.key ==pygame.K_r:
                         self.level = Test_level()
-                    if event.key == pygame.K_SPACE and self.paused:
-                        self.paused = not self.paused
-
-            if not self.paused:
-                if self.level.run(events):
-                    self.level = Test_level()
-                    self.paused = True
+   
+            if self.level.run(events):
+                menu = Menu()
+                menu.loop()
+                # self.run = False
                     
             if self.level.won:
-                self.level = Test_level()
-                self.paused = True
+                menu = Menu()
+                menu.loop()
+                # self.run = False
 
             self.clock.tick(FPS)
             self.display_fps()
             self.display_clock()
             pygame.display.flip()
-        
         
     def display_fps(self):
         text = self.font.render("FPS: " + str(int(self.clock.get_fps())), True, ("white"))
@@ -95,6 +96,8 @@ class Menu:
             for event in events:
                 if event.type == pygame.QUIT:
                     self.run = False
+                    pygame.quit()
+                    sys.exit()
                 if event.type ==pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
                         self.quit = True
@@ -102,26 +105,29 @@ class Menu:
                     if event.key == pygame.K_f:
                         pygame.display.toggle_fullscreen()
             if self.level.Tutorial.sprite.clicked:
+                self.level.Tutorial.sprite.clicked = not self.level.Tutorial.sprite.clicked 
                 self.tutorial.loop()
-                self.level.Tutorial.sprite.Clicked = False
+                
             if self.level.key_bindings.sprite.clicked:
                 self.keybindings = True
-                self.run = False
+                
             if self.level.fluffy.sprite.clicked:
                 self.fluffy = True
-                self.run = False
+                
             if self.level.quit.sprite.clicked:
                 self.quit= True
                 self.run = False
+                pygame.quit()
+                sys.exit()
             if self.level.Level_selection.sprite.clicked:
                 self.level_selector = True
-                self.run = False
+                
 
             self.clock.tick(FPS)
             pygame.display.flip()
 
 def main():
     menu = Menu()
-
+    menu.loop()
 if __name__ == '__main__':
     main()
