@@ -6,8 +6,9 @@ class Player(pygame.sprite.Sprite):
     def __init__(self, group, pos, collision_group, water_group, tree_group, bridge_group, sand_group, coconut_group):
         super().__init__(group)
 
+        # sound effects
         
-        
+        self.breath_halt = False
         # get the screen
         self.surface = pygame.display.get_surface()
 
@@ -61,7 +62,8 @@ class Player(pygame.sprite.Sprite):
         self.dead = False
         self.won = False
         self.speedrunner = 0
-    def get_input(self, events):
+
+    def get_input(self, events, music):
         keys = pygame.key.get_pressed()
         self.frames += self.frame_speed
         if keys[pygame.K_ESCAPE]:
@@ -83,9 +85,11 @@ class Player(pygame.sprite.Sprite):
                     self.direction.y = self.jump_height
                     self.image = self.jumping[0]
                     self.jumps += 1
+                    music.play_song("jump", volume = 0.05)
             if event.type == pygame.USEREVENT:
                 # time in ms
                 self.speedrunner += 1
+
     def move(self):
         if self.direction.magnitude() != 0:
             self.direction.normalize()
@@ -110,7 +114,6 @@ class Player(pygame.sprite.Sprite):
         elif self.direction.x < 0 and self.action == "left":
             self.image = pygame.transform.flip(self.walking_right[int(self.frames)%3], True, False)
 
-
     def apply_gravity(self):
         if self.underwater:
             self.gravity = 0.075
@@ -122,7 +125,6 @@ class Player(pygame.sprite.Sprite):
             self.jump_height = -3
             
         self.direction.y += self.gravity
-
 
     def horizontal_collision(self):
         for sprite in self.collision_group.sprites():
@@ -150,7 +152,7 @@ class Player(pygame.sprite.Sprite):
                     self.rect.top = sprite.rect.bottom
                     self.direction.y = 0
 
-    def water_collision(self):
+    def water_collision(self, music):
         for sprite in self.water_group.sprites():
             if sprite.rect.top < self.rect.centery:
                 self.underwater = True
@@ -160,6 +162,9 @@ class Player(pygame.sprite.Sprite):
                 self.underwater = False
                 self.all_blue()
                 break
+        if self.underwater and not self.breath_halt:
+            music.play_song("water", volume = 0.1)
+            self.breath_halt = True
 
     def all_blue(self):
         if self.underwater:
@@ -201,28 +206,30 @@ class Player(pygame.sprite.Sprite):
                     self.direction.y = 0
                     self.jumps = 0
 
-    def Sand_collision(self):
+    def Sand_collision(self, music):
         for sprite in self.sand_group.sprites():
             if sprite.rect.colliderect(self.rect):
                 sprite.touched = True
+                music.play_song("sand", volume = 0.01)
 
-    def Coconut_collision(self):
+    def Coconut_collision(self, music):
         for sprite in self.coconut_group.sprites():
              if sprite.rect.colliderect(self.rect):
                     self.collected += 1
                     sprite.kill()
+                    music.play_song("coc")
 
-    def update(self, event_list):
-        self.get_input(event_list)
+    def update(self, event_list, music):
+        self.get_input(event_list, music)
         self.move()
-        self.Sand_collision()
+        self.Sand_collision(music)
         self.horizontal_collision()
         self.apply_gravity()
         self.vertical_collision()
         self.Bridge_collision()
         self.animate()
-        self.water_collision()
-        self.Coconut_collision()
+        self.water_collision(music)
+        self.Coconut_collision(music)
         self.breath_bar()
         self.drowning()
         self.kill_player()

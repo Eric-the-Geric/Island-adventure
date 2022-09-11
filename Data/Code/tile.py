@@ -17,6 +17,7 @@ class WaterTile(pygame.sprite.Sprite):
         self.rect = self.image.get_rect(topleft = pos)
         self.speed = speed
         self.collision = False
+        
 
     def move(self):
         self.rect.centery -= self.speed

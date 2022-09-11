@@ -1,7 +1,6 @@
 # Imports
 
 import pygame
-import random
 from Data.Code.settings import *
 from Data.Code.helper import *
 from Data.Code.camera import Camera
@@ -112,15 +111,19 @@ class BaseLevel:
         # Level won?
         self.won = False
 
-    def run(self, event_list):
+    def run(self, event_list, music):
         if self.player.dead:
+            music.play_song("dead")
             return True
 
         if self.player.won:
+            music.stop_song()
+            music.play_song("won")
+            
             self.data[self.level_number]["level_won"] = "yes"
             if self.player.collected > self.data[self.level_number]["coconuts_collected"]:
                 self.data[self.level_number]["coconuts_collected"] = self.player.collected
-            if self.player.speedrunner/1000 < self.data[self.level_number]["fastest_time"] or self.data["Tutorial"]["fastest_time"]==0:
+            if self.player.speedrunner/1000 > 1 and self.player.speedrunner/1000 < self.data[self.level_number]["fastest_time"] or self.data[self.level_number]["fastest_time"]==0:
                 self.data[self.level_number]["fastest_time"] = self.player.speedrunner/1000
 
             with open('data.txt', 'w') as f:
@@ -129,7 +132,7 @@ class BaseLevel:
     
         self.camera_group.custom_draw(self.player)
         self.water_group.update()
-        self.player_group.update(event_list)
+        self.player_group.update(event_list, music)
         self.sand_group.update()
 
 
@@ -385,15 +388,19 @@ class LevelOne:
         # Level won?
         self.won = False
 
-    def run(self, event_list):
+    def run(self, event_list, music):
         if self.player.dead:
+            music.play_song("dead")
             return True
 
         if self.player.won:
+            music.stop_song()
+            music.play_song("swon")
+            
             self.data[self.level_number]["level_won"] = "yes"
             if self.player.collected > self.data[self.level_number]["coconuts_collected"]:
                 self.data[self.level_number]["coconuts_collected"] = self.player.collected
-            if self.player.speedrunner/1000 < self.data[self.level_number]["fastest_time"] or self.data[self.level_number]["fastest_time"]==0:
+            if self.player.speedrunner/1000 > 1 and self.player.speedrunner/1000 < self.data[self.level_number]["fastest_time"] or self.data[self.level_number]["fastest_time"]==0:
                 self.data[self.level_number]["fastest_time"] = self.player.speedrunner/1000
 
             with open('data.txt', 'w') as f:
@@ -402,7 +409,7 @@ class LevelOne:
     
         self.camera_group.custom_draw(self.player)
         self.water_group.update()
-        self.player_group.update(event_list)
+        self.player_group.update(event_list, music)
         self.sand_group.update()
 
     def _create_player(self, layout):
@@ -537,15 +544,19 @@ class LevelTwo:
         # Level won?
         self.won = False
 
-    def run(self, event_list):
+    def run(self, event_list, music):
         if self.player.dead:
+            music.play_song("dead")
             return True
 
         if self.player.won:
+            music.stop_song()
+            music.play_song("swon")
+            
             self.data[self.level_number]["level_won"] = "yes"
             if self.player.collected > self.data[self.level_number]["coconuts_collected"]:
                 self.data[self.level_number]["coconuts_collected"] = self.player.collected
-            if self.player.speedrunner/1000 < self.data[self.level_number]["fastest_time"] or self.data[self.level_number]["fastest_time"]==0:
+            if self.player.speedrunner/1000 > 1 and self.player.speedrunner/1000 < self.data[self.level_number]["fastest_time"] or self.data[self.level_number]["fastest_time"]==0:
                 self.data[self.level_number]["fastest_time"] = self.player.speedrunner/1000
 
             with open('data.txt', 'w') as f:
@@ -554,7 +565,7 @@ class LevelTwo:
     
         self.camera_group.custom_draw(self.player)
         self.water_group.update()
-        self.player_group.update(event_list)
+        self.player_group.update(event_list, music)
         self.sand_group.update()
 
     def _create_player(self, layout):
@@ -580,7 +591,7 @@ class LevelTwo:
                             if type == "tree":
                                 StaticTile([self.camera_group, self.tree_group], (x, y), image[int(value)])
                             if type == "water":
-                                WaterTile([self.camera_group, self.water_group], (x, y), image[int(value)], 2)
+                                WaterTile([self.camera_group, self.water_group], (x, y), image[int(value)], 1)
                             if type == "clouds":
                                 StaticTile([self.camera_group], (x, y), image[int(value)])
                             if type == "bridge":
@@ -689,15 +700,19 @@ class LevelThree:
         # Level won?
         self.won = False
 
-    def run(self, event_list):
+    def run(self, event_list, music):
         if self.player.dead:
+            music.play_song("dead")
             return True
 
         if self.player.won:
+            music.stop_song()
+            music.play_song("swon")
+            
             self.data[self.level_number]["level_won"] = "yes"
             if self.player.collected > self.data[self.level_number]["coconuts_collected"]:
                 self.data[self.level_number]["coconuts_collected"] = self.player.collected
-            if self.player.speedrunner/1000 < self.data[self.level_number]["fastest_time"] or self.data[self.level_number]["fastest_time"]==0:
+            if self.player.speedrunner/1000 > 1 and self.player.speedrunner/1000 < self.data[self.level_number]["fastest_time"] or self.data[self.level_number]["fastest_time"]==0:
                 self.data[self.level_number]["fastest_time"] = self.player.speedrunner/1000
 
             with open('data.txt', 'w') as f:
@@ -706,7 +721,7 @@ class LevelThree:
     
         self.camera_group.custom_draw(self.player)
         self.water_group.update()
-        self.player_group.update(event_list)
+        self.player_group.update(event_list, music)
         self.sand_group.update()
 
     def _create_player(self, layout):
@@ -842,15 +857,19 @@ class LevelFour:
         # Level won?
         self.won = False
 
-    def run(self, event_list):
+    def run(self, event_list, music):
         if self.player.dead:
+            music.play_song("dead")
             return True
 
         if self.player.won:
+            music.stop_song()
+            music.play_song("swon")
+            
             self.data[self.level_number]["level_won"] = "yes"
             if self.player.collected > self.data[self.level_number]["coconuts_collected"]:
                 self.data[self.level_number]["coconuts_collected"] = self.player.collected
-            if self.player.speedrunner/1000 < self.data[self.level_number]["fastest_time"] or self.data[self.level_number]["fastest_time"]==0:
+            if self.player.speedrunner/1000 > 1 and self.player.speedrunner/1000 < self.data[self.level_number]["fastest_time"] or self.data[self.level_number]["fastest_time"]==0:
                 self.data[self.level_number]["fastest_time"] = self.player.speedrunner/1000
 
             with open('data.txt', 'w') as f:
@@ -859,7 +878,7 @@ class LevelFour:
     
         self.camera_group.custom_draw(self.player)
         self.water_group.update()
-        self.player_group.update(event_list)
+        self.player_group.update(event_list, music)
         self.sand_group.update()
 
     def _create_player(self, layout):
@@ -994,15 +1013,19 @@ class LevelFive:
         # Level won?
         self.won = False
 
-    def run(self, event_list):
+    def run(self, event_list, music):
         if self.player.dead:
+            music.play_song("dead")
             return True
 
         if self.player.won:
+            music.stop_song()
+            music.play_song("swon")
+            
             self.data[self.level_number]["level_won"] = "yes"
             if self.player.collected > self.data[self.level_number]["coconuts_collected"]:
                 self.data[self.level_number]["coconuts_collected"] = self.player.collected
-            if self.player.speedrunner/1000 < self.data[self.level_number]["fastest_time"] or self.data[self.level_number]["fastest_time"]==0:
+            if self.player.speedrunner/1000 > 1 and self.player.speedrunner/1000 < self.data[self.level_number]["fastest_time"] or self.data[self.level_number]["fastest_time"]==0:
                 self.data[self.level_number]["fastest_time"] = self.player.speedrunner/1000
 
             with open('data.txt', 'w') as f:
@@ -1011,7 +1034,7 @@ class LevelFive:
     
         self.camera_group.custom_draw(self.player)
         self.water_group.update()
-        self.player_group.update(event_list)
+        self.player_group.update(event_list, music)
         self.sand_group.update()
 
 
@@ -1040,7 +1063,7 @@ class LevelFive:
                             if type == "tree":
                                 StaticTile([self.camera_group, self.tree_group], (x, y), image[int(value)])
                             if type == "water":
-                                WaterTile([self.camera_group, self.water_group], (x, y), image[int(value)], 1.1)
+                                WaterTile([self.camera_group, self.water_group], (x, y), image[int(value)], 1)
                             if type == "clouds":
                                 StaticTile([self.camera_group], (x, y), image[int(value)])
                             if type == "bridge":
