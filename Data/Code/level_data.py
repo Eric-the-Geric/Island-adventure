@@ -22,14 +22,17 @@ Level_graphics =      { "Bird":              "Data/Graphics/bird (192 x 64).png"
                         "Sand_particle":    "Data/Graphics/sand(5x5).png",
                         "Coconut":          "Data/Graphics/coconut (14x14).png",
                         "Clouds":            "Data/Graphics/cloud (192 x 64).png"}
+                       
+################################
+# main_menu data
+################################
+Main_menu_data = {
+    "buttons": "Data/Map/Menu/Menu.csv"
+}
+
+Menu_graphics = {"menu": "Data/Graphics/main_menu.png"}
 
 ################################
 # Level 1 data
 ################################
 
-
-
-
-################################
-# Saved Data
-################################

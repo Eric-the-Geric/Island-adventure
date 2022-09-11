@@ -9,6 +9,8 @@ from Data.Code.level_data import *
 from Data.Code.player import Player
 from Data.Code.tile import *
 import json
+
+
 class Test_level:
     def __init__(self):
 
@@ -26,6 +28,14 @@ class Test_level:
                 "level_won": "no"
             }
         }
+
+        try:
+            with open('data.txt') as f:
+                self.data = json.load(f)
+        except:
+            with open('data.txt', 'w') as f:
+                json.dump(self.data, f)
+
 
         # Initialize the sprite groups
         self.player_group = pygame.sprite.GroupSingle()
@@ -70,17 +80,21 @@ class Test_level:
 
         # Level won?
         self.won = False
+
     def run(self, event_list):
         if self.player.dead:
-            self.player.breath = 100
-            self.player.dead = False
             return True
+
         if self.player.won:
             self.data["Tutorial"]["level_won"] = "yes"
-            self.data["Tutorial"]["coconuts_collected"] = self.player.collected
-            self.data["Tutorial"]["fastest_time"] = self.player.speedrunner/1000
+            if self.player.collected > self.data["Tutorial"]["coconuts_collected"]:
+                self.data["Tutorial"]["coconuts_collected"] = self.player.collected
+            if self.player.speedrunner/1000 < self.data["Tutorial"]["fastest_time"]:
+                self.data["Tutorial"]["fastest_time"] = self.player.speedrunner/1000
 
             print(self.data)
+            with open('data.txt', 'w') as f:
+                json.dump(self.data, f)
             self.won = True
     
         self.camera_group.custom_draw(self.player)
@@ -121,3 +135,65 @@ class Test_level:
                                 StaticTile([self.camera_group, self.bridge_group], (x, y), image[int(value)])
                             if type == "coconut":
                                 StaticTile([self.camera_group, self.coconut_group], (x+32, y+64-14), image[int(value)])
+                            
+class Main_menu():
+    def __init__(self):
+        self.surface = pygame.display.get_surface()
+        # level data
+        self.Level_data = Main_menu_data
+        
+        # layout
+        self.layout = import_map_data(self.Level_data["buttons"])
+        
+        # groups
+        self.Tutorial = pygame.sprite.GroupSingle()
+        self.Level_selection = pygame.sprite.GroupSingle()
+        self.key_bindings = pygame.sprite.GroupSingle()
+        self.fluffy = pygame.sprite.GroupSingle()
+        self.quit = pygame.sprite.GroupSingle()
+
+
+        # images
+        self.image = import_complicated_full_sprite_sheet(Menu_graphics["menu"], 640, 128)
+
+        self._create_terrain(self.layout)
+
+    def run(self):
+        self.Tutorial.draw(self.surface)
+        self.Tutorial.update()
+        if self.Tutorial.sprite.clicked:
+            pass
+        self.Level_selection.draw(self.surface)
+        self.Level_selection.update()
+        if self.Level_selection.sprite.clicked:
+            pass
+        self.key_bindings.draw(self.surface)
+        self.key_bindings.update()
+        if self.key_bindings.sprite.clicked:
+            pass
+        self.fluffy.draw(self.surface)
+        self.fluffy.update()
+        if self.fluffy.sprite.clicked:
+            pass
+        self.quit.draw(self.surface)
+        self.quit.update()
+        if self.quit.sprite.clicked:
+            pass
+
+    def _create_terrain(self, layout):
+        for row_index, row in enumerate(layout):
+                for col_index, value in enumerate(row):
+                    y = row_index *128
+                    x = col_index *640
+                    if value != "-1":
+                        if value == "0":
+                            MenuTile(self.Tutorial, (x,y), self.image[int(value)])
+                        if value == "1":
+                            MenuTile(self.Level_selection, (x,y), self.image[int(value)])
+                        if value == "2":
+                            MenuTile(self.key_bindings, (x,y), self.image[int(value)])
+                        if value == "3":
+                            MenuTile(self.fluffy, (x,y), self.image[int(value)])
+                        if value == "4":
+                            MenuTile(self.quit, (x,y), self.image[int(value)])
+

@@ -2,7 +2,7 @@ import pygame
 from Data.Code.settings import *
 from Data.Code.levels import *
 
-class Game:
+class Tutorial:
 
     def __init__(self):
         pygame.init()
@@ -37,8 +37,8 @@ class Game:
                         pygame.display.toggle_fullscreen()
                     if event.key ==pygame.K_r:
                         self.level = Test_level()
-                if event.type == pygame.MOUSEBUTTONDOWN:
-                    self.paused = not self.paused
+                    if event.key == pygame.K_SPACE and self.paused:
+                        self.paused = not self.paused
 
             if not self.paused:
                 if self.level.run(events):
@@ -70,7 +70,71 @@ class Game:
         self.fps_offset.y += (self.level.player.rect.centery + 280 - self.fps_offset.y - (screen_height)//2)
         textRect.center = (self.level.player.rect.topleft - self.fps_offset)
         self.surface.blit(text, textRect)
+        
+class Menu:
+    def __init__(self):
+        pygame.init()
+        self.surface = pygame.display.set_mode(screen, flags=pygame.SCALED)
+        self.run = True
+        self.clock = pygame.time.Clock()
+        self.level = Main_menu()
+        self.tutorial = False
+        self.keybindings = False
+        self.quit = False
+        self.fluffy = False
+        self.level_selector = False
+
+    def loop(self):
+        pygame.display.set_caption("Island Ascension")
+        while self.run:
+            
+            self.surface.fill("white")
+            events = pygame.event.get()
+            self.level.run()
+            for event in events:
+                if event.type == pygame.QUIT:
+                    self.run = False
+                if event.type ==pygame.KEYDOWN:
+                    if event.key == pygame.K_ESCAPE:
+                        self.run = False
+                    if event.key == pygame.K_f:
+                        pygame.display.toggle_fullscreen()
+            if self.level.Tutorial.sprite.clicked:
+                self.tutorial = True
+                self.run = False
+            if self.level.key_bindings.sprite.clicked:
+                self.keybindings = True
+                self.run = False
+            if self.level.fluffy.sprite.clicked:
+                self.fluffy = True
+                self.run = False
+            if self.level.quit.sprite.clicked:
+                self.quit= True
+                self.run = False
+            if self.level.Level_selection.sprite.clicked:
+                self.level_selector = True
+                self.run = False
+
+            self.clock.tick(FPS)
+            pygame.display.flip()
+
+
+
+
+def main():
+    run = True
+    menu = Menu()
+    level = Tutorial()
+
+    while run:
+        menu.loop()
+        if menu.quit:
+            run = False
+        if menu.tutorial:
+            level.loop()
+
+
+    
 
 if __name__ == '__main__':
-    game = Game()
-    game.loop()
+    main()

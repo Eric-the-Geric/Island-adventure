@@ -67,3 +67,18 @@ class SandTile(pygame.sprite.Sprite):
 class Particles(pygame.sprite.Sprite):
     pass
 
+class MenuTile(pygame.sprite.Sprite):
+    def __init__(self, group, pos, image):
+        super().__init__(group)
+        self.image = image
+        self.rect = self.image.get_rect(topleft = pos)
+        self.mask = pygame.mask.from_surface(self.image)
+        self.clicked = False
+    
+    def mouse_collision(self):
+        mouse_pos = pygame.mouse.get_pos()
+        if self.rect.collidepoint(mouse_pos):
+            if pygame.mouse.get_pressed()[0] and not self.clicked:
+                self.clicked = True
+    def update(self):
+        self.mouse_collision()
