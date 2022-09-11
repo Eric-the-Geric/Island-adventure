@@ -22,40 +22,40 @@ class BaseLevel:
         self.Level_data = Level_test
         self.data = {
             "Tutorial": {
-                "fastest_time": 0,
+                "Best Time": 0,
                 "coconuts_collected": 0,
                 "max_coconuts": 3,
-                "level_won": "no"
+                "completed": "no"
             },
             "Level_One": {
-                "fastest_time": 0,
+                "Best Time": 0,
                 "coconuts_collected": 0,
                 "max_coconuts": 3,
-                "level_won": "no"
+                "completed": "no"
             },
             "Level_Two": {
-                "fastest_time": 0,
+                "Best Time": 0,
                 "coconuts_collected": 0,
                 "max_coconuts": 3,
-                "level_won": "no"
+                "completed": "no"
             },
             "Level_Three": {
-                "fastest_time": 0,
+                "Best Time": 0,
                 "coconuts_collected": 0,
                 "max_coconuts": 3,
-                "level_won": "no"
+                "completed": "no"
             },
             "Level_Four": {
-                "fastest_time": 0,
+                "Best Time": 0,
                 "coconuts_collected": 0,
                 "max_coconuts": 3,
-                "level_won": "no"
+                "completed": "no"
             },
             "Level_Five": {
-                "fastest_time": 0,
+                "Best Time": 0,
                 "coconuts_collected": 0,
                 "max_coconuts": 3,
-                "level_won": "no"
+                "completed": "no"
             }
         }
 
@@ -123,14 +123,12 @@ class BaseLevel:
             return True
 
         if self.player.won:
-            music.stop_song()
-            music.play_song("won")
             
-            self.data[self.level_number]["level_won"] = "yes"
+            self.data[self.level_number]["completed"] = "yes"
             if self.player.collected > self.data[self.level_number]["coconuts_collected"]:
                 self.data[self.level_number]["coconuts_collected"] = self.player.collected
-            if self.player.speedrunner/1000 > 1 and self.player.speedrunner/1000 < self.data[self.level_number]["fastest_time"] or self.data[self.level_number]["fastest_time"]==0:
-                self.data[self.level_number]["fastest_time"] = self.player.speedrunner/1000
+            if self.player.speedrunner/1000 > 1 and self.player.speedrunner/1000 < self.data[self.level_number]["Best Time"] or self.data[self.level_number]["Best Time"]==0:
+                self.data[self.level_number]["Best Time"] = self.player.speedrunner/1000
 
             with open('data.txt', 'w') as f:
                 json.dump(self.data, f)
@@ -238,6 +236,7 @@ class Main_menu:
 
 class Level_selector:
     def __init__(self):
+        self.font = pygame.font.Font(None, 20)
         self.surface = pygame.display.get_surface()
         # level data
         self.Level_data = Level_selector_data
@@ -251,17 +250,80 @@ class Level_selector:
         self.three = pygame.sprite.GroupSingle()
         self.four = pygame.sprite.GroupSingle()
         self.five = pygame.sprite.GroupSingle()
+        self.data = {
+            "Tutorial": {
+                "Best Time": 0,
+                "coconuts_collected": 0,
+                "max_coconuts": 3,
+                "completed": "no"
+            },
+            "Level_One": {
+                "Best Time": 0,
+                "coconuts_collected": 0,
+                "max_coconuts": 3,
+                "completed": "no"
+            },
+            "Level_Two": {
+                "Best Time": 0,
+                "coconuts_collected": 0,
+                "max_coconuts": 3,
+                "completed": "no"
+            },
+            "Level_Three": {
+                "Best Time": 0,
+                "coconuts_collected": 0,
+                "max_coconuts": 3,
+                "completed": "no"
+            },
+            "Level_Four": {
+                "Best Time": 0,
+                "coconuts_collected": 0,
+                "max_coconuts": 3,
+                "completed": "no"
+            },
+            "Level_Five": {
+                "Best Time": 0,
+                "coconuts_collected": 0,
+                "max_coconuts": 3,
+                "completed": "no"
+            }
+        }
+
+        try:
+            with open('data.txt') as f:
+                self.data = json.load(f)
+        except:
+            with open('data.txt', 'w') as f:
+                json.dump(self.data, f)
 
         # images
         self.image = import_complicated_full_sprite_sheet(Level_selector_graphics["level"], tile_size, tile_size)
 
         self._create_terrain(self.layout)
+        self.level_to_display = "Tutorial"
 
-    def run(self):
+    def run(self, events):
+            for event in events:
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_1:
+                        self.level_to_display = "Tutorial"
+                    if event.key == pygame.K_2:
+                        self.level_to_display = "Level_One"
+                    if event.key == pygame.K_3:
+                        self.level_to_display = "Level_Two"
+                    if event.key == pygame.K_4:
+                        self.level_to_display = "Level_Three"
+                    if event.key == pygame.K_5:
+                        self.level_to_display = "Level_Four"
+                    if event.key == pygame.K_6:
+                        self.level_to_display = "Level_Five"
             self.one.draw(self.surface)
             self.one.update()
-            if self.one.sprite.clicked:
-                pass
+            text = self.font.render(self.level_to_display + " : " + str(self.data[self.level_to_display]), True, ("black"))
+            textRect = text.get_rect()
+            textRect.center = (320, 320)
+            self.surface.blit(text, textRect)
+                
             self.two.draw(self.surface)
             self.two.update()
             if self.two.sprite.clicked:
@@ -310,40 +372,40 @@ class LevelOne:
         self.Level_data = Level_1
         self.data = {
             "Tutorial": {
-                "fastest_time": 0,
+                "Best Time": 0,
                 "coconuts_collected": 0,
                 "max_coconuts": 3,
-                "level_won": "no"
+                "completed": "no"
             },
             "Level_One": {
-                "fastest_time": 0,
+                "Best Time": 0,
                 "coconuts_collected": 0,
                 "max_coconuts": 3,
-                "level_won": "no"
+                "completed": "no"
             },
             "Level_Two": {
-                "fastest_time": 0,
+                "Best Time": 0,
                 "coconuts_collected": 0,
                 "max_coconuts": 3,
-                "level_won": "no"
+                "completed": "no"
             },
             "Level_Three": {
-                "fastest_time": 0,
+                "Best Time": 0,
                 "coconuts_collected": 0,
                 "max_coconuts": 3,
-                "level_won": "no"
+                "completed": "no"
             },
             "Level_Four": {
-                "fastest_time": 0,
+                "Best Time": 0,
                 "coconuts_collected": 0,
                 "max_coconuts": 3,
-                "level_won": "no"
+                "completed": "no"
             },
             "Level_Five": {
-                "fastest_time": 0,
+                "Best Time": 0,
                 "coconuts_collected": 0,
                 "max_coconuts": 3,
-                "level_won": "no"
+                "completed": "no"
             }
         }
 
@@ -413,11 +475,11 @@ class LevelOne:
             music.stop_song()
             music.play_song("swon")
             
-            self.data[self.level_number]["level_won"] = "yes"
+            self.data[self.level_number]["completed"] = "yes"
             if self.player.collected > self.data[self.level_number]["coconuts_collected"]:
                 self.data[self.level_number]["coconuts_collected"] = self.player.collected
-            if self.player.speedrunner/1000 > 1 and self.player.speedrunner/1000 < self.data[self.level_number]["fastest_time"] or self.data[self.level_number]["fastest_time"]==0:
-                self.data[self.level_number]["fastest_time"] = self.player.speedrunner/1000
+            if (self.player.speedrunner/1000 > 1 and self.player.speedrunner/1000 < self.data[self.level_number]["Best Time"]) or self.data[self.level_number]["Best Time"] <2:
+                self.data[self.level_number]["Best Time"] = self.player.speedrunner/1000
 
             with open('data.txt', 'w') as f:
                 json.dump(self.data, f)
@@ -473,43 +535,42 @@ class LevelTwo:
         self.Level_data = Level_2
         self.data = {
             "Tutorial": {
-                "fastest_time": 0,
+                "Best Time": 0,
                 "coconuts_collected": 0,
                 "max_coconuts": 3,
-                "level_won": "no"
+                "completed": "no"
             },
             "Level_One": {
-                "fastest_time": 0,
+                "Best Time": 0,
                 "coconuts_collected": 0,
                 "max_coconuts": 3,
-                "level_won": "no"
+                "completed": "no"
             },
             "Level_Two": {
-                "fastest_time": 0,
+                "Best Time": 0,
                 "coconuts_collected": 0,
                 "max_coconuts": 3,
-                "level_won": "no"
+                "completed": "no"
             },
             "Level_Three": {
-                "fastest_time": 0,
+                "Best Time": 0,
                 "coconuts_collected": 0,
                 "max_coconuts": 3,
-                "level_won": "no"
+                "completed": "no"
             },
             "Level_Four": {
-                "fastest_time": 0,
+                "Best Time": 0,
                 "coconuts_collected": 0,
                 "max_coconuts": 3,
-                "level_won": "no"
+                "completed": "no"
             },
             "Level_Five": {
-                "fastest_time": 0,
+                "Best Time": 0,
                 "coconuts_collected": 0,
                 "max_coconuts": 3,
-                "level_won": "no"
+                "completed": "no"
             }
         }
-
         try:
             with open('data.txt') as f:
                 self.data = json.load(f)
@@ -575,11 +636,11 @@ class LevelTwo:
             music.stop_song()
             music.play_song("swon")
             
-            self.data[self.level_number]["level_won"] = "yes"
+            self.data[self.level_number]["completed"] = "yes"
             if self.player.collected > self.data[self.level_number]["coconuts_collected"]:
                 self.data[self.level_number]["coconuts_collected"] = self.player.collected
-            if self.player.speedrunner/1000 > 1 and self.player.speedrunner/1000 < self.data[self.level_number]["fastest_time"] or self.data[self.level_number]["fastest_time"]==0:
-                self.data[self.level_number]["fastest_time"] = self.player.speedrunner/1000
+            if self.player.speedrunner/1000 > 1 and self.player.speedrunner/1000 < self.data[self.level_number]["Best Time"] or self.data[self.level_number]["Best Time"]==0:
+                self.data[self.level_number]["Best Time"] = self.player.speedrunner/1000
 
             with open('data.txt', 'w') as f:
                 json.dump(self.data, f)
@@ -636,43 +697,42 @@ class LevelThree:
         self.Level_data = Level_3
         self.data = {
             "Tutorial": {
-                "fastest_time": 0,
+                "Best Time": 0,
                 "coconuts_collected": 0,
                 "max_coconuts": 3,
-                "level_won": "no"
+                "completed": "no"
             },
             "Level_One": {
-                "fastest_time": 0,
+                "Best Time": 0,
                 "coconuts_collected": 0,
                 "max_coconuts": 3,
-                "level_won": "no"
+                "completed": "no"
             },
             "Level_Two": {
-                "fastest_time": 0,
+                "Best Time": 0,
                 "coconuts_collected": 0,
                 "max_coconuts": 3,
-                "level_won": "no"
+                "completed": "no"
             },
             "Level_Three": {
-                "fastest_time": 0,
+                "Best Time": 0,
                 "coconuts_collected": 0,
                 "max_coconuts": 3,
-                "level_won": "no"
+                "completed": "no"
             },
             "Level_Four": {
-                "fastest_time": 0,
+                "Best Time": 0,
                 "coconuts_collected": 0,
                 "max_coconuts": 3,
-                "level_won": "no"
+                "completed": "no"
             },
             "Level_Five": {
-                "fastest_time": 0,
+                "Best Time": 0,
                 "coconuts_collected": 0,
                 "max_coconuts": 3,
-                "level_won": "no"
+                "completed": "no"
             }
         }
-
         try:
             with open('data.txt') as f:
                 self.data = json.load(f)
@@ -736,11 +796,11 @@ class LevelThree:
             music.stop_song()
             music.play_song("swon")
             
-            self.data[self.level_number]["level_won"] = "yes"
+            self.data[self.level_number]["completed"] = "yes"
             if self.player.collected > self.data[self.level_number]["coconuts_collected"]:
                 self.data[self.level_number]["coconuts_collected"] = self.player.collected
-            if self.player.speedrunner/1000 > 1 and self.player.speedrunner/1000 < self.data[self.level_number]["fastest_time"] or self.data[self.level_number]["fastest_time"]==0:
-                self.data[self.level_number]["fastest_time"] = self.player.speedrunner/1000
+            if self.player.speedrunner/1000 > 1 and self.player.speedrunner/1000 < self.data[self.level_number]["Best Time"] or self.data[self.level_number]["Best Time"]==0:
+                self.data[self.level_number]["Best Time"] = self.player.speedrunner/1000
 
             with open('data.txt', 'w') as f:
                 json.dump(self.data, f)
@@ -797,43 +857,42 @@ class LevelFour:
         self.Level_data = Level_4
         self.data = {
             "Tutorial": {
-                "fastest_time": 0,
+                "Best Time": 0,
                 "coconuts_collected": 0,
                 "max_coconuts": 3,
-                "level_won": "no"
+                "completed": "no"
             },
             "Level_One": {
-                "fastest_time": 0,
+                "Best Time": 0,
                 "coconuts_collected": 0,
                 "max_coconuts": 3,
-                "level_won": "no"
+                "completed": "no"
             },
             "Level_Two": {
-                "fastest_time": 0,
+                "Best Time": 0,
                 "coconuts_collected": 0,
                 "max_coconuts": 3,
-                "level_won": "no"
+                "completed": "no"
             },
             "Level_Three": {
-                "fastest_time": 0,
+                "Best Time": 0,
                 "coconuts_collected": 0,
                 "max_coconuts": 3,
-                "level_won": "no"
+                "completed": "no"
             },
             "Level_Four": {
-                "fastest_time": 0,
+                "Best Time": 0,
                 "coconuts_collected": 0,
                 "max_coconuts": 3,
-                "level_won": "no"
+                "completed": "no"
             },
             "Level_Five": {
-                "fastest_time": 0,
+                "Best Time": 0,
                 "coconuts_collected": 0,
                 "max_coconuts": 3,
-                "level_won": "no"
+                "completed": "no"
             }
         }
-
         try:
             with open('data.txt') as f:
                 self.data = json.load(f)
@@ -899,11 +958,11 @@ class LevelFour:
             music.stop_song()
             music.play_song("swon")
             
-            self.data[self.level_number]["level_won"] = "yes"
+            self.data[self.level_number]["completed"] = "yes"
             if self.player.collected > self.data[self.level_number]["coconuts_collected"]:
                 self.data[self.level_number]["coconuts_collected"] = self.player.collected
-            if self.player.speedrunner/1000 > 1 and self.player.speedrunner/1000 < self.data[self.level_number]["fastest_time"] or self.data[self.level_number]["fastest_time"]==0:
-                self.data[self.level_number]["fastest_time"] = self.player.speedrunner/1000
+            if self.player.speedrunner/1000 > 1 and self.player.speedrunner/1000 < self.data[self.level_number]["Best Time"] or self.data[self.level_number]["Best Time"]==0:
+                self.data[self.level_number]["Best Time"] = self.player.speedrunner/1000
 
             with open('data.txt', 'w') as f:
                 json.dump(self.data, f)
@@ -960,43 +1019,42 @@ class LevelFive:
         self.Level_data = Level_5
         self.data = {
             "Tutorial": {
-                "fastest_time": 0,
+                "Best Time": 0,
                 "coconuts_collected": 0,
                 "max_coconuts": 3,
-                "level_won": "no"
+                "completed": "no"
             },
             "Level_One": {
-                "fastest_time": 0,
+                "Best Time": 0,
                 "coconuts_collected": 0,
                 "max_coconuts": 3,
-                "level_won": "no"
+                "completed": "no"
             },
             "Level_Two": {
-                "fastest_time": 0,
+                "Best Time": 0,
                 "coconuts_collected": 0,
                 "max_coconuts": 3,
-                "level_won": "no"
+                "completed": "no"
             },
             "Level_Three": {
-                "fastest_time": 0,
+                "Best Time": 0,
                 "coconuts_collected": 0,
                 "max_coconuts": 3,
-                "level_won": "no"
+                "completed": "no"
             },
             "Level_Four": {
-                "fastest_time": 0,
+                "Best Time": 0,
                 "coconuts_collected": 0,
                 "max_coconuts": 3,
-                "level_won": "no"
+                "completed": "no"
             },
             "Level_Five": {
-                "fastest_time": 0,
+                "Best Time": 0,
                 "coconuts_collected": 0,
                 "max_coconuts": 3,
-                "level_won": "no"
+                "completed": "no"
             }
         }
-
         try:
             with open('data.txt') as f:
                 self.data = json.load(f)
@@ -1061,11 +1119,11 @@ class LevelFive:
             music.stop_song()
             music.play_song("swon")
             
-            self.data[self.level_number]["level_won"] = "yes"
+            self.data[self.level_number]["completed"] = "yes"
             if self.player.collected > self.data[self.level_number]["coconuts_collected"]:
                 self.data[self.level_number]["coconuts_collected"] = self.player.collected
-            if self.player.speedrunner/1000 > 1 and self.player.speedrunner/1000 < self.data[self.level_number]["fastest_time"] or self.data[self.level_number]["fastest_time"]==0:
-                self.data[self.level_number]["fastest_time"] = self.player.speedrunner/1000
+            if self.player.speedrunner/1000 > 1 and self.player.speedrunner/1000 < self.data[self.level_number]["Best Time"] or self.data[self.level_number]["Best Time"]==0:
+                self.data[self.level_number]["Best Time"] = self.player.speedrunner/1000
 
             with open('data.txt', 'w') as f:
                 json.dump(self.data, f)

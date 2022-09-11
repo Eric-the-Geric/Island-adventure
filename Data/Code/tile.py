@@ -131,7 +131,6 @@ class MenuTile(pygame.sprite.Sprite):
 class LevelTile(MenuTile):
     def __init__(self, group, pos, image):
         super().__init__(group, pos, image)
-        #self.image = pygame.transform.scale(self.image, (128, 128))
         self.display_your_data = False
 
     def mouse_collision(self):
@@ -143,4 +142,6 @@ class LevelTile(MenuTile):
 
             if pygame.mouse.get_pressed()[1]:
                 self.display_your_data = True
+    def update(self):
+        self.mouse_collision()
         

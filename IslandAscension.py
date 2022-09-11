@@ -191,6 +191,8 @@ class Level_Selection:
         self.level_four = FourthLevel()
         self.level_five = FifthLevel()
         self.level_choice = "None"
+        
+
 
     def loop(self, music):
         pygame.display.set_caption("Island Ascension")
@@ -198,7 +200,7 @@ class Level_Selection:
             
             self.surface.fill("white")
             events = pygame.event.get()
-            self.level.run()
+            self.level.run(events)
             for event in events:
                 if event.type == pygame.QUIT:
                     self.run = False
