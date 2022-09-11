@@ -8,12 +8,24 @@ from Data.Code.camera import Camera
 from Data.Code.level_data import *
 from Data.Code.player import Player
 from Data.Code.tile import *
-
+import json
 class Test_level:
     def __init__(self):
 
         # Get the current surface
         self.surface = pygame.display.get_surface()
+
+        
+        # Level data
+        self.Level_data = Level_test
+        self.data = {
+            "Tutorial": {
+                "fastest_time": 0,
+                "coconuts_collected": 0,
+                "max_coconuts": 3,
+                "level_won": "no"
+            }
+        }
 
         # Initialize the sprite groups
         self.player_group = pygame.sprite.GroupSingle()
@@ -24,14 +36,16 @@ class Test_level:
         self.tree_group = pygame.sprite.Group()
         self.bridge_group = pygame.sprite.Group()
         self.sand_group = pygame.sprite.Group()
+        self.coconut_group = pygame.sprite.Group()
 
         # Getting the layout data
-        self.player_layout = import_map_data(Level_test["Player"])
-        self.terrain_layout = import_map_data(Level_test["Sand"])
-        self.tree_layout = import_map_data(Level_test["Tree"])
-        self.water_layout = import_map_data(Level_test["Water"])
-        self.clouds_layout = import_map_data(Level_test["Clouds"])
-        self.bridge_layout = import_map_data(Level_test["Bridge"])
+        self.player_layout = import_map_data(self.Level_data["Player"])
+        self.terrain_layout = import_map_data(self.Level_data["Sand"])
+        self.tree_layout = import_map_data(self.Level_data["Tree"])
+        self.water_layout = import_map_data(self.Level_data["Water"])
+        self.clouds_layout = import_map_data(self.Level_data["Clouds"])
+        self.bridge_layout = import_map_data(self.Level_data["Bridge"])
+        self.coconut_layout = import_map_data(self.Level_data["Coconut"])
 
         # set up the images
         self.terrain_image = import_complicated_full_sprite_sheet(Level_graphics["Sand"], tile_size, tile_size)
@@ -39,8 +53,8 @@ class Test_level:
         self.water_image = import_complicated_full_sprite_sheet(Level_graphics["Water"], tile_size, tile_size)
         self.clouds_image = import_complicated_full_sprite_sheet(Level_graphics["Clouds"], tile_size, tile_size)
         self.bridge_image = import_complicated_full_sprite_sheet(Level_graphics["Bridge"], tile_size, tile_size)
-
-        # the powerup
+        
+        # collectables
         self.coconut_image = import_complicated_full_sprite_sheet(Level_graphics["Coconut"], 14, 14)
 
 
@@ -50,15 +64,24 @@ class Test_level:
         self._create_terrain(self.tree_layout, "tree", self.tree_image)
         self._create_terrain(self.bridge_layout, "bridge", self.bridge_image)
         self._create_terrain(self.clouds_layout, "clouds", self.clouds_image)
-        self.water = self._create_terrain(self.water_layout, "water", self.water_image)
+        self._create_terrain(self.coconut_layout, "coconut", self.coconut_image)
+        self._create_terrain(self.water_layout, "water", self.water_image)
+        
 
+        # Level won?
+        self.won = False
     def run(self, event_list):
         if self.player.dead:
-            print("oof")
             self.player.breath = 100
             self.player.dead = False
             return True
+        if self.player.won:
+            self.data["Tutorial"]["level_won"] = "yes"
+            self.data["Tutorial"]["coconuts_collected"] = self.player.collected
+            self.data["Tutorial"]["fastest_time"] = self.player.speedrunner/1000
 
+            print(self.data)
+            self.won = True
     
         self.camera_group.custom_draw(self.player)
         self.water_group.update()
@@ -74,7 +97,7 @@ class Test_level:
                         if value == '0':
                             y = row_index *tile_size
                             x = col_index *tile_size
-                            return Player([self.player_group, self.camera_group], (x, y), self.collision_group, self.water_group, self.tree_group, self.bridge_group, self.sand_group)
+                            return Player([self.player_group, self.camera_group], (x, y), self.collision_group, self.water_group, self.tree_group, self.bridge_group, self.sand_group, self.coconut_group)
     
     
     def _create_terrain(self, layout, type, image):
@@ -96,3 +119,5 @@ class Test_level:
                                 StaticTile([self.camera_group], (x, y), image[int(value)])
                             if type == "bridge":
                                 StaticTile([self.camera_group, self.bridge_group], (x, y), image[int(value)])
+                            if type == "coconut":
+                                StaticTile([self.camera_group, self.coconut_group], (x+32, y+64-14), image[int(value)])

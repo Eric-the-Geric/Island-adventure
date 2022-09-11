@@ -3,7 +3,7 @@ from Data.Code.helper import *
 from Data.Code.level_data import Level_graphics
 
 class Player(pygame.sprite.Sprite):
-    def __init__(self, group, pos, collision_group, water_group, tree_group, bridge_group, sand_group):
+    def __init__(self, group, pos, collision_group, water_group, tree_group, bridge_group, sand_group, coconut_group):
         super().__init__(group)
 
         
@@ -25,7 +25,8 @@ class Player(pygame.sprite.Sprite):
         self.jump_height = -5
         self.jumps = 0
         self.max_jumps = 1
-        self.score = 0
+        self.collected = 0
+        
 
 
         # Player graphics
@@ -37,12 +38,15 @@ class Player(pygame.sprite.Sprite):
         self.image = self.idle[0]
         self.rect = self.image.get_rect(topleft=pos)
         self.mask = pygame.mask.from_surface(self.image)
+
             #collisions
         self.collision_group = collision_group
         self.water_group = water_group
         self.tree_group = tree_group
         self.bridge_group = bridge_group
         self.sand_group = sand_group
+        self.coconut_group = coconut_group
+
         # Player animation
 
         self.frames = 0
@@ -55,7 +59,8 @@ class Player(pygame.sprite.Sprite):
         self.max_breath = 200
         self.breath = 200
         self.dead = False
-
+        self.won = False
+        self.speedrunner = 0
     def get_input(self, events):
         keys = pygame.key.get_pressed()
         self.frames += self.frame_speed
@@ -78,6 +83,9 @@ class Player(pygame.sprite.Sprite):
                     self.direction.y = self.jump_height
                     self.image = self.jumping[0]
                     self.jumps += 1
+            if event.type == pygame.USEREVENT:
+                # time in ms
+                self.speedrunner += 1
     def move(self):
         if self.direction.magnitude() != 0:
             self.direction.normalize()
@@ -174,7 +182,7 @@ class Player(pygame.sprite.Sprite):
     def win_level(self):
         for sprite in self.tree_group:
             if sprite.rect.colliderect(self.rect):
-                print("you win")
+                self.won = True
 
     def Bridge_collision(self):
         for sprite in self.bridge_group.sprites():
@@ -189,6 +197,12 @@ class Player(pygame.sprite.Sprite):
             if sprite.rect.colliderect(self.rect):
                 sprite.touched = True
 
+    def Coconut_collision(self):
+        for sprite in self.coconut_group.sprites():
+             if sprite.rect.colliderect(self.rect):
+                    self.collected += 1
+                    sprite.kill()
+
     def update(self, event_list):
         self.get_input(event_list)
         self.move()
@@ -199,11 +213,8 @@ class Player(pygame.sprite.Sprite):
         self.Bridge_collision()
         self.animate()
         self.water_collision()
-        
+        self.Coconut_collision()
         self.breath_bar()
         self.drowning()
         self.kill_player()
         self.win_level()
-        
-        #print(self.jump_height, self.underwater, self.speed, self.gravity)
-        #self.deep_blue()

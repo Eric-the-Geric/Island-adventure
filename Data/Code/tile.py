@@ -41,8 +41,7 @@ class SandTile(pygame.sprite.Sprite):
         self.pos = pos
         self.init_fall = False
         self.gravity = 5
-        #self.direction = pygame.math.Vector2()
-        
+        self.groups = group
     
     def shake(self):
         if self.touched and not self.init_fall:
@@ -60,7 +59,11 @@ class SandTile(pygame.sprite.Sprite):
     def update(self):
         if self.init_fall:
             self.move()
+            self.remove(self.groups[0])
         self.shake()
+        if self.rect.centery > self.pos[1] + 400:
+            self.kill()
         
 class Particles(pygame.sprite.Sprite):
     pass
+

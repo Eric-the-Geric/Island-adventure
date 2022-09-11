@@ -8,7 +8,8 @@ Level_test = {"Bridge": "Data/Map/Test/Test Map_Bridge.csv",
               "Player": "Data/Map/Test/Test Map_Player.csv",
               "Sand": "Data/Map/Test/Test Map_Sand.csv",
               "Tree": "Data/Map/Test/Test Map_Tree.csv",
-              "Water": "Data/Map/Test/Test Map_Water.csv"}
+              "Water": "Data/Map/Test/Test Map_Water.csv",
+              "Coconut": "Data/Map/Test/Test Map_Coconut.csv"}
 
 Level_graphics =      { "Bird":              "Data/Graphics/bird (192 x 64).png",
                         "Bridge":           "Data/Graphics/Bridge (64x64).png",
@@ -24,4 +25,11 @@ Level_graphics =      { "Bird":              "Data/Graphics/bird (192 x 64).png"
 
 ################################
 # Level 1 data
+################################
+
+
+
+
+################################
+# Saved Data
 ################################
