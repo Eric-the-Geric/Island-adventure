@@ -10,7 +10,6 @@ class Tutorial:
 
         # with the flags arguments it makes it so I can toggle full-screen
         self.surface = pygame.display.set_mode(screen, flags=pygame.SCALED)
-        
         self.run = True
         self.clock = pygame.time.Clock()
         self.level = BaseLevel()
@@ -119,7 +118,7 @@ class FifthLevel(Tutorial):
 
 class Menu:
     def __init__(self):
-        #self.music = SoundEffects()
+        self.music = SoundEffects()
         self.surface = pygame.display.set_mode(screen, flags=pygame.SCALED)
         self.run = True
         self.clock = pygame.time.Clock()
@@ -153,6 +152,8 @@ class Menu:
                     if event.key == pygame.K_f:
                         pygame.display.toggle_fullscreen()
             if self.level.Tutorial.sprite.clicked:
+                self.music.stop_song()
+                self.music.play_song("tut")
                 self.tutorial.loop(music)
                 
                 
@@ -166,7 +167,7 @@ class Menu:
             if self.level.fluffy.sprite.clicked:
                 self.fluffy = True
             if self.fluffy:
-
+                self.music.play_song("da")
                 self.fluffy = False
                 
             if self.level.quit.sprite.clicked:

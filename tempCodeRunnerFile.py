@@ -1,2 +1,1 @@
-menu = Menu()
-    menu.loop()
+fill

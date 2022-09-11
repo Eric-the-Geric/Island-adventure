@@ -77,15 +77,18 @@ class BaseLevel:
         self.bridge_group = pygame.sprite.Group()
         self.sand_group = pygame.sprite.Group()
         self.coconut_group = pygame.sprite.Group()
+        self.animated_group = pygame.sprite.Group()
 
         # Getting the layout data
         self.player_layout = import_map_data(self.Level_data["Player"])
         self.terrain_layout = import_map_data(self.Level_data["Sand"])
+        self.background_layout = import_map_data(self.Level_data["Background"])
         self.tree_layout = import_map_data(self.Level_data["Tree"])
         self.water_layout = import_map_data(self.Level_data["Water"])
         self.clouds_layout = import_map_data(self.Level_data["Clouds"])
         self.bridge_layout = import_map_data(self.Level_data["Bridge"])
         self.coconut_layout = import_map_data(self.Level_data["Coconut"])
+        
 
         # set up the images
         self.terrain_image = import_complicated_full_sprite_sheet(Level_graphics["Sand"], tile_size, tile_size)
@@ -93,13 +96,16 @@ class BaseLevel:
         self.water_image = import_complicated_full_sprite_sheet(Level_graphics["Water"], tile_size, tile_size)
         self.clouds_image = import_complicated_full_sprite_sheet(Level_graphics["Clouds"], tile_size, tile_size)
         self.bridge_image = import_complicated_full_sprite_sheet(Level_graphics["Bridge"], tile_size, tile_size)
+        self.background_image = import_complicated_full_sprite_sheet(Level_graphics["Background"], tile_size, tile_size)
         
         # collectables
         self.coconut_image = import_complicated_full_sprite_sheet(Level_graphics["Coconut"], 14, 14)
 
 
         # Set up the sprites
+        self._create_terrain(self.background_layout, "background", self.background_image)
         self.player = self._create_player(self.player_layout)
+        
         self._create_terrain(self.terrain_layout, "terrain", self.terrain_image)
         self._create_terrain(self.tree_layout, "tree", self.tree_image)
         self._create_terrain(self.bridge_layout, "bridge", self.bridge_image)
@@ -129,11 +135,14 @@ class BaseLevel:
             with open('data.txt', 'w') as f:
                 json.dump(self.data, f)
             self.won = True
-    
+        
         self.camera_group.custom_draw(self.player)
+        self.animated_group.update()
         self.water_group.update()
-        self.player_group.update(event_list, music)
+        
         self.sand_group.update()
+        self.player_group.update(event_list, music)
+        
 
 
 
@@ -168,6 +177,8 @@ class BaseLevel:
                                 StaticTile([self.camera_group, self.bridge_group], (x, y), image[int(value)])
                             if type == "coconut":
                                 StaticTile([self.camera_group, self.coconut_group], (x+32, y+64-14), image[int(value)])
+                            if type == "background":
+                                AnimatedTile([self.camera_group, self.animated_group], (x, y), image)
                             
 class Main_menu:
     def __init__(self):
@@ -354,6 +365,7 @@ class LevelOne:
         self.bridge_group = pygame.sprite.Group()
         self.sand_group = pygame.sprite.Group()
         self.coconut_group = pygame.sprite.Group()
+        self.animated_group = pygame.sprite.Group()
 
         # Getting the layout data
         self.player_layout = import_map_data(self.Level_data["Player"])
@@ -362,7 +374,9 @@ class LevelOne:
         self.water_layout = import_map_data(self.Level_data["Water"])
         self.clouds_layout = import_map_data(self.Level_data["Clouds"])
         self.bridge_layout = import_map_data(self.Level_data["Bridge"])
-        self.coconut_layout = import_map_data(self.Level_data["Coconut"])
+        self.coconut_layout = import_map_data(self.Level_data["Coconut"])        
+        self.background_layout = import_map_data(self.Level_data["Background"])        
+
 
         # set up the images
         self.terrain_image = import_complicated_full_sprite_sheet(Level_graphics["Sand"], tile_size, tile_size)
@@ -370,12 +384,14 @@ class LevelOne:
         self.water_image = import_complicated_full_sprite_sheet(Level_graphics["Water"], tile_size, tile_size)
         self.clouds_image = import_complicated_full_sprite_sheet(Level_graphics["Clouds"], tile_size, tile_size)
         self.bridge_image = import_complicated_full_sprite_sheet(Level_graphics["Bridge"], tile_size, tile_size)
+        self.background_image = import_complicated_full_sprite_sheet(Level_graphics["Background"], tile_size, tile_size)
         
         # collectables
         self.coconut_image = import_complicated_full_sprite_sheet(Level_graphics["Coconut"], 14, 14)
 
 
         # Set up the sprites
+        self._create_terrain(self.background_layout, "background", self.background_image)
         self.player = self._create_player(self.player_layout)
         self._create_terrain(self.terrain_layout, "terrain", self.terrain_image)
         self._create_terrain(self.tree_layout, "tree", self.tree_image)
@@ -406,7 +422,7 @@ class LevelOne:
             with open('data.txt', 'w') as f:
                 json.dump(self.data, f)
             self.won = True
-    
+        self.animated_group.update()
         self.camera_group.custom_draw(self.player)
         self.water_group.update()
         self.player_group.update(event_list, music)
@@ -442,6 +458,8 @@ class LevelOne:
                                 StaticTile([self.camera_group, self.bridge_group], (x, y), image[int(value)])
                             if type == "coconut":
                                 StaticTile([self.camera_group, self.coconut_group], (x+32, y+64-14), image[int(value)])
+                            if type == "background":
+                                AnimatedTile([self.camera_group, self.animated_group], (x, y), image)
       
 class LevelTwo:
     def __init__(self):
@@ -510,6 +528,7 @@ class LevelTwo:
         self.bridge_group = pygame.sprite.Group()
         self.sand_group = pygame.sprite.Group()
         self.coconut_group = pygame.sprite.Group()
+        self.animated_group = pygame.sprite.Group()
 
         # Getting the layout data
         self.player_layout = import_map_data(self.Level_data["Player"])
@@ -519,6 +538,7 @@ class LevelTwo:
         self.clouds_layout = import_map_data(self.Level_data["Clouds"])
         self.bridge_layout = import_map_data(self.Level_data["Bridge"])
         self.coconut_layout = import_map_data(self.Level_data["Coconut"])
+        self.background_layout = import_map_data(self.Level_data["Background"])
 
         # set up the images
         self.terrain_image = import_complicated_full_sprite_sheet(Level_graphics["Sand"], tile_size, tile_size)
@@ -526,12 +546,14 @@ class LevelTwo:
         self.water_image = import_complicated_full_sprite_sheet(Level_graphics["Water"], tile_size, tile_size)
         self.clouds_image = import_complicated_full_sprite_sheet(Level_graphics["Clouds"], tile_size, tile_size)
         self.bridge_image = import_complicated_full_sprite_sheet(Level_graphics["Bridge"], tile_size, tile_size)
+        self.background_image = import_complicated_full_sprite_sheet(Level_graphics["Background"], tile_size, tile_size)
         
         # collectables
         self.coconut_image = import_complicated_full_sprite_sheet(Level_graphics["Coconut"], 14, 14)
 
 
         # Set up the sprites
+        self._create_terrain(self.background_layout, "background", self.background_image)
         self.player = self._create_player(self.player_layout)
         self._create_terrain(self.terrain_layout, "terrain", self.terrain_image)
         self._create_terrain(self.tree_layout, "tree", self.tree_image)
@@ -566,6 +588,7 @@ class LevelTwo:
         self.camera_group.custom_draw(self.player)
         self.water_group.update()
         self.player_group.update(event_list, music)
+        self.animated_group.update()
         self.sand_group.update()
 
     def _create_player(self, layout):
@@ -598,6 +621,8 @@ class LevelTwo:
                                 StaticTile([self.camera_group, self.bridge_group], (x, y), image[int(value)])
                             if type == "coconut":
                                 StaticTile([self.camera_group, self.coconut_group], (x+32, y+64-14), image[int(value)])
+                            if type == "background":
+                                AnimatedTile([self.camera_group, self.animated_group], (x, y), image)
    
 class LevelThree:
     def __init__(self):
@@ -666,6 +691,7 @@ class LevelThree:
         self.bridge_group = pygame.sprite.Group()
         self.sand_group = pygame.sprite.Group()
         self.coconut_group = pygame.sprite.Group()
+        self.animated_group = pygame.sprite.Group()
 
         # Getting the layout data
         self.player_layout = import_map_data(self.Level_data["Player"])
@@ -675,6 +701,7 @@ class LevelThree:
         self.clouds_layout = import_map_data(self.Level_data["Clouds"])
         self.bridge_layout = import_map_data(self.Level_data["Bridge"])
         self.coconut_layout = import_map_data(self.Level_data["Coconut"])
+        self.background_layout = import_map_data(self.Level_data["Background"])
 
         # set up the images
         self.terrain_image = import_complicated_full_sprite_sheet(Level_graphics["Sand"], tile_size, tile_size)
@@ -682,12 +709,12 @@ class LevelThree:
         self.water_image = import_complicated_full_sprite_sheet(Level_graphics["Water"], tile_size, tile_size)
         self.clouds_image = import_complicated_full_sprite_sheet(Level_graphics["Clouds"], tile_size, tile_size)
         self.bridge_image = import_complicated_full_sprite_sheet(Level_graphics["Bridge"], tile_size, tile_size)
-        
         # collectables
         self.coconut_image = import_complicated_full_sprite_sheet(Level_graphics["Coconut"], 14, 14)
-
+        self.background_image = import_complicated_full_sprite_sheet(Level_graphics["Background"], tile_size, tile_size)
 
         # Set up the sprites
+        self._create_terrain(self.background_layout, "background", self.background_image)
         self.player = self._create_player(self.player_layout)
         self._create_terrain(self.terrain_layout, "terrain", self.terrain_image)
         self._create_terrain(self.tree_layout, "tree", self.tree_image)
@@ -722,6 +749,7 @@ class LevelThree:
         self.camera_group.custom_draw(self.player)
         self.water_group.update()
         self.player_group.update(event_list, music)
+        self.animated_group.update()
         self.sand_group.update()
 
     def _create_player(self, layout):
@@ -754,6 +782,8 @@ class LevelThree:
                                 StaticTile([self.camera_group, self.bridge_group], (x, y), image[int(value)])
                             if type == "coconut":
                                 StaticTile([self.camera_group, self.coconut_group], (x+32, y+64-14), image[int(value)])
+                            if type == "background":
+                                AnimatedTile([self.camera_group, self.animated_group], (x, y), image)
  
 class LevelFour:
     def __init__(self):
@@ -822,6 +852,7 @@ class LevelFour:
         self.bridge_group = pygame.sprite.Group()
         self.sand_group = pygame.sprite.Group()
         self.coconut_group = pygame.sprite.Group()
+        self.animated_group = pygame.sprite.Group()
 
         # Getting the layout data
         self.player_layout = import_map_data(self.Level_data["Player"])
@@ -831,6 +862,7 @@ class LevelFour:
         self.clouds_layout = import_map_data(self.Level_data["Clouds"])
         self.bridge_layout = import_map_data(self.Level_data["Bridge"])
         self.coconut_layout = import_map_data(self.Level_data["Coconut"])
+        self.background_layout = import_map_data(self.Level_data["Background"])
 
         # set up the images
         self.terrain_image = import_complicated_full_sprite_sheet(Level_graphics["Sand"], tile_size, tile_size)
@@ -841,9 +873,10 @@ class LevelFour:
         
         # collectables
         self.coconut_image = import_complicated_full_sprite_sheet(Level_graphics["Coconut"], 14, 14)
-
+        self.background_image = import_complicated_full_sprite_sheet(Level_graphics["Background"], tile_size, tile_size)
 
         # Set up the sprites
+        self._create_terrain(self.background_layout, "background", self.background_image)
         self.player = self._create_player(self.player_layout)
         self._create_terrain(self.coconut_layout, "coconut", self.coconut_image)
         self._create_terrain(self.tree_layout, "tree", self.tree_image)
@@ -879,6 +912,7 @@ class LevelFour:
         self.camera_group.custom_draw(self.player)
         self.water_group.update()
         self.player_group.update(event_list, music)
+        self.animated_group.update()
         self.sand_group.update()
 
     def _create_player(self, layout):
@@ -911,6 +945,8 @@ class LevelFour:
                                 StaticTile([self.camera_group, self.bridge_group], (x, y), image[int(value)])
                             if type == "coconut":
                                 StaticTile([self.camera_group, self.coconut_group], (x+32, y+64-14), image[int(value)])
+                            if type == "background":
+                                AnimatedTile([self.camera_group, self.animated_group], (x, y), image)
  
 class LevelFive:
     def __init__(self):
@@ -979,6 +1015,7 @@ class LevelFive:
         self.bridge_group = pygame.sprite.Group()
         self.sand_group = pygame.sprite.Group()
         self.coconut_group = pygame.sprite.Group()
+        self.animated_group = pygame.sprite.Group()
 
         # Getting the layout data
         self.player_layout = import_map_data(self.Level_data["Player"])
@@ -988,6 +1025,7 @@ class LevelFive:
         self.clouds_layout = import_map_data(self.Level_data["Clouds"])
         self.bridge_layout = import_map_data(self.Level_data["Bridge"])
         self.coconut_layout = import_map_data(self.Level_data["Coconut"])
+        self.background_layout = import_map_data(self.Level_data["Background"])
 
         # set up the images
         self.terrain_image = import_complicated_full_sprite_sheet(Level_graphics["Sand"], tile_size, tile_size)
@@ -998,9 +1036,10 @@ class LevelFive:
         
         # collectables
         self.coconut_image = import_complicated_full_sprite_sheet(Level_graphics["Coconut"], 14, 14)
-
+        self.background_image = import_complicated_full_sprite_sheet(Level_graphics["Background"], tile_size, tile_size)
 
         # Set up the sprites
+        self._create_terrain(self.background_layout, "background", self.background_image)
         self.player = self._create_player(self.player_layout)
         self._create_terrain(self.coconut_layout, "coconut", self.coconut_image)
         self._create_terrain(self.bridge_layout, "bridge", self.bridge_image)
@@ -1035,6 +1074,7 @@ class LevelFive:
         self.camera_group.custom_draw(self.player)
         self.water_group.update()
         self.player_group.update(event_list, music)
+        self.animated_group.update()
         self.sand_group.update()
 
 
@@ -1070,4 +1110,6 @@ class LevelFive:
                                 StaticTile([self.camera_group, self.bridge_group], (x, y), image[int(value)])
                             if type == "coconut":
                                 StaticTile([self.camera_group, self.coconut_group], (x+32, y+64-14), image[int(value)])
+                            if type == "background":
+                                AnimatedTile([self.camera_group, self.animated_group], (x, y), image)
  
