@@ -33,6 +33,16 @@ Main_menu_data = {
 Menu_graphics = {"menu": "Data/Graphics/main_menu.png"}
 
 ################################
+# Level Selector data
+################################
+Level_selector_data = {
+    "buttons": "Data/Map/Level_selector/level_selector.csv"
+}
+
+Level_selector_graphics = {"level": "Data/Graphics/Level_Selection.png"}
+
+
+################################
 # Level 1 data
 ################################
 

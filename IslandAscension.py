@@ -79,12 +79,68 @@ class Menu:
         self.run = True
         self.clock = pygame.time.Clock()
         self.level = Main_menu()
-        self.tutorial = False
         self.keybindings = False
         self.quit = False
         self.fluffy = False
         self.level_selector = False
         self.tutorial = Tutorial()
+        self.keybindings_img = pygame.image.load("Data/Graphics/keybindings.png").convert()
+        self.keybings_rect = self.keybindings_img.get_rect(topleft = (0,0))
+        self.level_selector = Level_Selection()
+    def loop(self):
+        pygame.display.set_caption("Island Ascension")
+        while self.run:
+            
+            self.surface.fill("white")
+            events = pygame.event.get()
+            self.level.run()
+            for event in events:
+                if event.type == pygame.QUIT:
+                    self.run = False
+                    pygame.quit()
+                    sys.exit()
+                if event.type ==pygame.KEYDOWN:
+                    if event.key == pygame.K_ESCAPE:
+                        self.keybindings = False
+                    if event.key == pygame.K_f:
+                        pygame.display.toggle_fullscreen()
+            if self.level.Tutorial.sprite.clicked:
+                self.tutorial.loop()
+                
+            if self.level.key_bindings.sprite.clicked:
+                self.keybindings = True
+            if self.keybindings:
+                self.surface.blit(self.keybindings_img, (0,0))
+            if self.level.Level_selection.sprite.clicked:
+                self.level_selector.loop()
+                   
+            if self.level.fluffy.sprite.clicked:
+                self.fluffy = True
+                
+            if self.level.quit.sprite.clicked:
+                self.quit= True
+                self.run = False
+                pygame.quit()
+                sys.exit()
+
+            
+                
+            
+            self.clock.tick(FPS)
+            pygame.display.flip()
+
+class Level_Selection:
+    def __init__(self):
+        pygame.init()
+        self.surface = pygame.display.set_mode(screen, flags=pygame.SCALED)
+        self.run = True
+        self.clock = pygame.time.Clock()
+        self.level = Level_selector()
+        self.one = False
+        self.two = False
+        self.three = False
+        self.four = False
+        self.five = False
 
     def loop(self):
         pygame.display.set_caption("Island Ascension")
@@ -100,28 +156,10 @@ class Menu:
                     sys.exit()
                 if event.type ==pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
-                        self.quit = True
-                        self.run = False
+                        menu = Menu()
+                        menu.loop()
                     if event.key == pygame.K_f:
                         pygame.display.toggle_fullscreen()
-            if self.level.Tutorial.sprite.clicked:
-                self.level.Tutorial.sprite.clicked = not self.level.Tutorial.sprite.clicked 
-                self.tutorial.loop()
-                
-            if self.level.key_bindings.sprite.clicked:
-                self.keybindings = True
-                
-            if self.level.fluffy.sprite.clicked:
-                self.fluffy = True
-                
-            if self.level.quit.sprite.clicked:
-                self.quit= True
-                self.run = False
-                pygame.quit()
-                sys.exit()
-            if self.level.Level_selection.sprite.clicked:
-                self.level_selector = True
-                
 
             self.clock.tick(FPS)
             pygame.display.flip()

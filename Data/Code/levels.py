@@ -135,7 +135,7 @@ class Test_level:
                             if type == "coconut":
                                 StaticTile([self.camera_group, self.coconut_group], (x+32, y+64-14), image[int(value)])
                             
-class Main_menu():
+class Main_menu:
     def __init__(self):
         self.surface = pygame.display.get_surface()
         # level data
@@ -160,24 +160,19 @@ class Main_menu():
     def run(self):
         self.Tutorial.draw(self.surface)
         self.Tutorial.update()
-        if self.Tutorial.sprite.clicked:
-            pass
+        
         self.Level_selection.draw(self.surface)
         self.Level_selection.update()
-        if self.Level_selection.sprite.clicked:
-            pass
+        
         self.key_bindings.draw(self.surface)
         self.key_bindings.update()
-        if self.key_bindings.sprite.clicked:
-            pass
+        
         self.fluffy.draw(self.surface)
         self.fluffy.update()
-        if self.fluffy.sprite.clicked:
-            pass
+        
         self.quit.draw(self.surface)
         self.quit.update()
-        if self.quit.sprite.clicked:
-            pass
+        
 
     def _create_terrain(self, layout):
         for row_index, row in enumerate(layout):
@@ -196,3 +191,64 @@ class Main_menu():
                         if value == "4":
                             MenuTile(self.quit, (x,y), self.image[int(value)])
 
+class Level_selector:
+    def __init__(self):
+        self.surface = pygame.display.get_surface()
+        # level data
+        self.Level_data = Level_selector_data
+        
+        # layout
+        self.layout = import_map_data(self.Level_data["buttons"])
+        
+        # groups
+        self.one = pygame.sprite.GroupSingle()
+        self.two = pygame.sprite.GroupSingle()
+        self.three = pygame.sprite.GroupSingle()
+        self.four = pygame.sprite.GroupSingle()
+        self.five = pygame.sprite.GroupSingle()
+
+        # images
+        self.image = import_complicated_full_sprite_sheet(Level_selector_graphics["level"], tile_size, tile_size)
+
+        self._create_terrain(self.layout)
+
+    def run(self):
+            self.one.draw(self.surface)
+            self.one.update()
+            if self.one.sprite.clicked:
+                pass
+            self.two.draw(self.surface)
+            self.two.update()
+            if self.two.sprite.clicked:
+                pass
+            self.three.draw(self.surface)
+            self.three.update()
+            if self.three.sprite.clicked:
+                pass
+            self.four.draw(self.surface)
+            self.four.update()
+            if self.four.sprite.clicked:
+                pass
+            self.five.draw(self.surface)
+            self.five.update()
+            if self.five.sprite.clicked:
+                pass
+
+
+
+    def _create_terrain(self, layout):
+        for row_index, row in enumerate(layout):
+            for col_index, value in enumerate(row):
+                y = row_index *tile_size
+                x = col_index *tile_size
+                if value != "-1":
+                    if value == "0":
+                        LevelTile(self.one, (x,y), self.image[int(value)])
+                    if value == "1":
+                        LevelTile(self.two, (x,y), self.image[int(value)])
+                    if value == "2":
+                        LevelTile(self.three, (x,y), self.image[int(value)])
+                    if value == "3":
+                        LevelTile(self.four, (x,y), self.image[int(value)])
+                    if value == "4":
+                        LevelTile(self.five, (x,y), self.image[int(value)])
