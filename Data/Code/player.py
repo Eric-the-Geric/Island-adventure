@@ -56,8 +56,8 @@ class Player(pygame.sprite.Sprite):
         # Interactions
 
         self.underwater = False
-        self.max_breath = 200
-        self.breath = 200
+        self.max_breath = 300
+        self.breath = 300
         self.dead = False
         self.won = False
         self.speedrunner = 0
@@ -114,7 +114,7 @@ class Player(pygame.sprite.Sprite):
     def apply_gravity(self):
         if self.underwater:
             self.gravity = 0.075
-            self.speed = 2
+            self.speed = 2.7
             
         else:
             self.gravity = 0.15
@@ -137,7 +137,11 @@ class Player(pygame.sprite.Sprite):
     def vertical_collision(self):
         for sprite in self.collision_group.sprites():
             if sprite.rect.colliderect(self.rect):
-                if self.direction.y > 0:
+                if self.direction.y > 8 and abs(self.rect.bottom - sprite.rect.top) < 60:
+                    self.rect.bottom = sprite.rect.top
+                    self.direction.y = 0
+                    self.jumps = 0
+                elif self.direction.y > 0 and abs(self.rect.bottom - sprite.rect.top) < 50:
                     self.rect.bottom = sprite.rect.top
                     self.direction.y = 0
                     self.jumps = 0
@@ -150,14 +154,14 @@ class Player(pygame.sprite.Sprite):
         for sprite in self.water_group.sprites():
             if sprite.rect.top < self.rect.centery:
                 self.underwater = True
-                self.deep_blue()
+                self.all_blue()
                 break
             elif sprite.rect.bottom > self.rect.centery:
                 self.underwater = False
-                self.deep_blue()
+                self.all_blue()
                 break
 
-    def deep_blue(self):
+    def all_blue(self):
         if self.underwater:
             for sprite in self.water_group.sprites():
                 sprite.collision = True
@@ -187,7 +191,12 @@ class Player(pygame.sprite.Sprite):
     def Bridge_collision(self):
         for sprite in self.bridge_group.sprites():
             if sprite.rect.colliderect(self.rect):
-                if self.direction.y > 0 and abs(self.rect.bottom - sprite.rect.top) < 25:
+                
+                if self.direction.y > 5.5 and abs(self.rect.bottom - sprite.rect.top) < 42:
+                    self.rect.bottom = sprite.rect.top
+                    self.direction.y = 0
+                    self.jumps = 0
+                elif self.direction.y > 0 and abs(self.rect.bottom - sprite.rect.top) < 25:
                     self.rect.bottom = sprite.rect.top
                     self.direction.y = 0
                     self.jumps = 0

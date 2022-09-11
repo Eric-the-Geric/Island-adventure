@@ -11,11 +11,11 @@ class StaticTile(pygame.sprite.Sprite):
         self.mask = pygame.mask.from_surface(self.image)
 
 class WaterTile(pygame.sprite.Sprite):
-    def __init__(self, group, pos, image):
+    def __init__(self, group, pos, image, speed):
         super().__init__(group)
         self.image = image
         self.rect = self.image.get_rect(topleft = pos)
-        self.speed = 0.1
+        self.speed = speed
         self.collision = False
 
     def move(self):
@@ -88,7 +88,7 @@ class MenuTile(pygame.sprite.Sprite):
 class LevelTile(MenuTile):
     def __init__(self, group, pos, image):
         super().__init__(group, pos, image)
-        self.image = pygame.transform.scale(self.image, (128, 128))
+        #self.image = pygame.transform.scale(self.image, (128, 128))
         self.display_your_data = False
 
     def mouse_collision(self):

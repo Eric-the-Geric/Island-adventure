@@ -41,7 +41,7 @@ class Tutorial:
                     if event.key == pygame.K_f:
                         pygame.display.toggle_fullscreen()
                     if event.key ==pygame.K_r:
-                        self.level = BaseLevel()
+                        self.level.run(events)
    
             if self.level.run(events):
                 menu = Menu()
@@ -72,8 +72,34 @@ class Tutorial:
         self.fps_offset.x += (self.level.player.rect.centerx - 240 - self.fps_offset.x - (screen_width)//2)
         self.fps_offset.y += (self.level.player.rect.centery + 280 - self.fps_offset.y - (screen_height)//2)
         textRect.center = (self.level.player.rect.topleft - self.fps_offset)
-        self.surface.blit(text, textRect)
-        
+        self.surface.blit(text, textRect)        
+    def display_coconuts(self):
+        #//todo
+        pass
+
+class FirstLevel(Tutorial):
+    def __init__(self):
+        super().__init__()
+        self.level = LevelOne()
+class SecondLevel(Tutorial):
+    def __init__(self):
+        super().__init__()
+        self.level = LevelTwo()
+class ThirdLevel(Tutorial):
+    def __init__(self):
+        super().__init__()
+        self.level = LevelThree()
+class FourthLevel(Tutorial):
+    def __init__(self):
+        super().__init__()
+        self.level = LevelFour()
+
+class FifthLevel(Tutorial):
+    def __init__(self):
+        super().__init__()
+        self.level = LevelFive()
+
+
 class Menu:
     def __init__(self):
         pygame.init()
@@ -89,6 +115,7 @@ class Menu:
         self.keybindings_img = pygame.image.load("Data/Graphics/keybindings.png").convert()
         self.keybings_rect = self.keybindings_img.get_rect(topleft = (0,0))
         self.level_selector = Level_Selection()
+
     def loop(self):
         pygame.display.set_caption("Island Ascension")
         while self.run:
@@ -103,7 +130,9 @@ class Menu:
                     sys.exit()
                 if event.type ==pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
-                        self.keybindings = False
+                        if self.keybindings:
+                            self.keybindings = False
+                        else: self.run = False
                     if event.key == pygame.K_f:
                         pygame.display.toggle_fullscreen()
             if self.level.Tutorial.sprite.clicked:
@@ -138,12 +167,12 @@ class Level_Selection:
         self.run = True
         self.clock = pygame.time.Clock()
         self.level = Level_selector()
-        self.level_one = LevelOne()
-        self.one = False
-        self.two = False
-        self.three = False
-        self.four = False
-        self.five = False
+        self.level_one = FirstLevel()
+        self.level_two = SecondLevel()
+        self.level_three = ThirdLevel()
+        self.level_four = FourthLevel()
+        self.level_five = FifthLevel()
+        self.level_choice = "None"
 
     def loop(self):
         pygame.display.set_caption("Island Ascension")
@@ -164,9 +193,26 @@ class Level_Selection:
                     if event.key == pygame.K_f:
                         pygame.display.toggle_fullscreen()
             if self.level.one.sprite.clicked:
-                self.one = True
-            if self.one:
-                self.level_one.run(events)
+                self.level_choice = "One"
+            if self.level_choice == "One":
+                self.level_one.loop()
+            if self.level.two.sprite.clicked:
+                self.level_choice = "Two"
+            if self.level_choice == "Two":
+                self.level_two.loop()
+            if self.level.three.sprite.clicked:
+                self.level_choice = "Three"
+            if self.level_choice == "Three":
+                self.level_three.loop()
+            if self.level.four.sprite.clicked:
+                self.level_choice = "Four"
+            if self.level_choice == "Four":
+                self.level_four.loop()
+            if self.level.five.sprite.clicked:
+                self.level_choice = "Five"
+            if self.level_choice == "Five":
+                self.level_five.loop()
+
             self.clock.tick(FPS)
             pygame.display.flip()
 
